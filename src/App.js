@@ -124,11 +124,7 @@ function App() {
               <input type="hidden" name="poolID" value={pool.id} />
               <input type="hidden" name="better" value={me.name} />
 
-              <button
-                type="submit"
-                className="bg-blue-700 rounded-sm px-4 py-2 text-white"
-                value="Submit"
-              >
+              <button type="submit" className="bg-blue-700 rounded-sm px-4 py-2 text-white" value="Submit">
                 Submit
               </button>
             </form>
