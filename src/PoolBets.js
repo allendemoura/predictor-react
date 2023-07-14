@@ -95,14 +95,15 @@ export const PoolBets = (props) => {
         {/* loop out all the bets for the given side of the pool */}
         {bets.map((bet, index) => {
           return (
+            // makes a proportionate section of the bar for each bet
             <div
               onMouseEnter={(e) => handleMouseEnter(e, bet)}
               onMouseLeave={(e) => handleMouseLeave(e)}
               key={bet.id}
-              className="w-full"
+              className="w-full border-4 hover:border-black border-transparent"
               style={{
-                height: `${(bet.amount / poolAmount) * 100}%`, // show bets proportional to the total pool amount
-                backgroundColor: COLORS[index % COLORS.length], // cycle through colors selected for constrast adjaceny
+                height: `${(bet.amount / poolAmount) * 100}%`, // proportionate height calculated as percentage of total pool
+                backgroundColor: COLORS[index % COLORS.length], // cycle through colors selected for constrast adjacency
               }}
             ></div>
           );
