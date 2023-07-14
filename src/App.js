@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
+import { ClerkProvider } from "@clerk/clerk-react";
 
 import { Pool } from "./Pool.js";
+
+if (!process.env.REACT_APP_CLERK_PUBLISHABLE_KEY) {
+  throw new Error("Missing Publishable Key");
+}
+const clerkPubKey = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY;
 
 const me = {
   name: "Tebbo",
@@ -92,46 +98,47 @@ export default function App() {
 
   // html to be rendered in browser
   return (
-    // mobile optimized tailwind css
-    <div className="w-96 mx-auto border-x border-gray-400 min-h-screen">
-      <header className="p-4 text-2xl font-bold">Gambol!</header>
+    <ClerkProvider publishableKey={clerkPubKey}>
+      {/* mobile optimized tailwind css */}
+      <div className="w-96 mx-auto border-x border-gray-400 min-h-screen">
+        <header className="p-4 text-2xl font-bold">Gambol!</header>
 
-      {/* user list */}
-      <div className="border-b border-gray-400 p-4">
-        <div className="font-bold">All Users</div>
-        {
-          // loop through users and render them
-          users.map((user) => (
-            <div key={user.id}>
-              {user.name} {user.balance}
-            </div>
-          ))
-        }
-      </div>
+        {/* user list */}
+        <div className="border-b border-gray-400 p-4">
+          <div className="font-bold">All Users</div>
+          {
+            // loop through users and render them
+            users.map((user) => (
+              <div key={user.id}>
+                {user.name} {user.balance}
+              </div>
+            ))
+          }
+        </div>
 
-      {/* list of my bets TODO: change this to active bets*/}
-      <div className="border-b border-gray-400 p-4">
-        <div className="font-bold">My Bets</div>
-        {
-          // loop through bets and render them
-          myBets.map((bet) => (
-            <div key={bet.id}>
-              {bet.poolID} {bet.amount} {bet.bet}
-            </div>
-          ))
-        }
-      </div>
+        {/* list of my bets TODO: change this to active bets*/}
+        <div className="border-b border-gray-400 p-4">
+          <div className="font-bold">My Bets</div>
+          {
+            // loop through bets and render them
+            myBets.map((bet) => (
+              <div key={bet.id}>
+                {bet.poolID} {bet.amount} {bet.bet}
+              </div>
+            ))
+          }
+        </div>
 
-      {/* list of all active pools */}
-      <div className="border-b border-gray-400 p-4">
-        <div className="font-bold">All Pools</div>
-        {
-          // loop through pools and render them
-          pools.map((pool) => (
-            <div key={pool.id}>
-              {pool.desc} <b>{pool.point}</b> Under: {pool.underPool} Over: {pool.overPool}
-              {/* generate form for betting on each pool */}
-              {/* <form onSubmit={handleSubmit} className="mb-8">
+        {/* list of all active pools */}
+        <div className="border-b border-gray-400 p-4">
+          <div className="font-bold">All Pools</div>
+          {
+            // loop through pools and render them
+            pools.map((pool) => (
+              <div key={pool.id}>
+                {pool.desc} <b>{pool.point}</b> Under: {pool.underPool} Over: {pool.overPool}
+                {/* generate form for betting on each pool */}
+                {/* <form onSubmit={handleSubmit} className="mb-8">
                 <div className="border-b border-gray-400 mb-2">
                   <input type="number" name="amount" placeholder="Amount" />
                 </div>
@@ -150,13 +157,14 @@ export default function App() {
                   Submit
                 </button>
               </form> */}
-            </div>
-          ))
-        }
-      </div>
+              </div>
+            ))
+          }
+        </div>
 
-      {/* preview Pool component */}
-      {pools[0] && <Pool pool={pools[0]} users={users} />}
-    </div>
+        {/* preview Pool component */}
+        {pools[0] && <Pool pool={pools[0]} users={users} />}
+      </div>
+    </ClerkProvider>
   );
 }
