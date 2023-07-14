@@ -30,6 +30,10 @@ export default function App() {
       throw new Error(`HTTP error! status: ${response.status}`);
     } else {
       const json = await response.json();
+
+      console.log(response);
+      console.log(json);
+
       setPools(json);
     }
   };
@@ -93,18 +97,20 @@ export default function App() {
     <div className="w-96 mx-auto border-x border-gray-400 min-h-screen">
       <header className="p-4 text-2xl font-bold">Gambol!</header>
 
+      {/* user list */}
       <div class="border-b border-gray-400 p-4">
         <div className="font-bold">All Users</div>
         {
           // loop through users and render them
           users.map((user) => (
             <div key={user.id}>
-              {user.id} {user.name} {user.balance}
+              {user.name} {user.balance}
             </div>
           ))
         }
       </div>
 
+      {/* list of my bets TODO: change this to active bets*/}
       <div class="border-b border-gray-400 p-4">
         <div className="font-bold">My Bets</div>
         {
@@ -117,15 +123,16 @@ export default function App() {
         }
       </div>
 
+      {/* list of all active pools */}
       <div class="border-b border-gray-400 p-4">
         <div className="font-bold">All Pools</div>
         {
           // loop through pools and render them
           pools.map((pool) => (
             <div key={pool.id}>
-              {pool.id} {pool.desc} {pool.point}
+              {pool.desc} <b>{pool.point}</b> Under: {pool.underPool} Over: {pool.overPool}
               {/* generate form for betting on each pool */}
-              <form onSubmit={handleSubmit} className="mb-8">
+              {/* <form onSubmit={handleSubmit} className="mb-8">
                 <div className="border-b border-gray-400 mb-2">
                   <input type="number" name="amount" placeholder="Amount" />
                 </div>
@@ -143,7 +150,7 @@ export default function App() {
                 <button type="submit" className="bg-blue-700 rounded-sm px-4 py-2 text-white" value="Submit">
                   Submit
                 </button>
-              </form>
+              </form> */}
             </div>
           ))
         }
