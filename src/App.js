@@ -5,11 +5,13 @@ const me = {
   id: 2,
 };
 
-function App() {
+export default function App() {
+  // init state using hooks
   const [users, setUsers] = useState([]);
   const [pools, setPools] = useState([]);
   const [myBets, setMyBets] = useState([]);
 
+  // def functions to fetch data
   const fetchAllUsers = async () => {
     const response = await fetch("http://localhost:8080/users");
 
@@ -43,27 +45,22 @@ function App() {
     }
   };
 
-  // Fetch all users on first render
+  // Fetch everything on first render
   useEffect(() => {
     fetchAllUsers();
     fetchAllPools();
     fetchAllMyBets();
   }, []);
 
+  // function to submit bet from to backend form info
   const handleSubmit = async (event) => {
+    // prevent default form behaviour (refresh page)
     event.preventDefault();
+
+    // unpack form data
     const { amount, poolID, bet, better } = event.target.elements;
 
-    console.log(amount.value, poolID.value, bet.value, better.value);
-
-    // const response = await fetch(`/api/character/save/${field}`, {
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   method: "POST",
-    //   body: JSON.stringify(payload),
-    // });
-
+    // send bet to backend
     const response = await fetch("http://localhost:8080/bets", {
       method: "POST",
       headers: {
@@ -77,62 +74,80 @@ function App() {
       }),
     });
 
-    const json = await response.json();
+    // check response
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    } else {
+      const json = await response.json();
 
-    fetchAllMyBets();
+      // TODO: update user balance and pool amount on frontend for UI snappiness
+
+      // refresh bet data
+      fetchAllMyBets();
+    }
   };
 
+  // html to be rendered in browser
   return (
+    // mobile optimized tailwind css
     <div className="w-96 mx-auto border-x border-gray-400 min-h-screen">
       <header className="p-4 text-2xl font-bold">Gambol!</header>
 
       <div class="border-b border-gray-400 p-4">
         <div className="font-bold">All Users</div>
-        {users.map((user) => (
-          <div key={user.id}>
-            {user.id} {user.name} {user.balance}
-          </div>
-        ))}
+        {
+          // loop through users and render them
+          users.map((user) => (
+            <div key={user.id}>
+              {user.id} {user.name} {user.balance}
+            </div>
+          ))
+        }
       </div>
 
       <div class="border-b border-gray-400 p-4">
         <div className="font-bold">My Bets</div>
-        {myBets.map((bet) => (
-          <div key={bet.id}>
-            {bet.poolID} {bet.amount} {bet.bet}
-          </div>
-        ))}
+        {
+          // loop through bets and render them
+          myBets.map((bet) => (
+            <div key={bet.id}>
+              {bet.poolID} {bet.amount} {bet.bet}
+            </div>
+          ))
+        }
       </div>
 
       <div class="border-b border-gray-400 p-4">
         <div className="font-bold">All Pools</div>
-        {pools.map((pool) => (
-          <div key={pool.id}>
-            {pool.id} {pool.desc} {pool.point}
-            <form onSubmit={handleSubmit} className="mb-8">
-              <div className="border-b border-gray-400 mb-2">
-                <input type="number" name="amount" placeholder="Amount" />
-              </div>
+        {
+          // loop through pools and render them
+          pools.map((pool) => (
+            <div key={pool.id}>
+              {pool.id} {pool.desc} {pool.point}
+              {/* generate form for betting on each pool */}
+              <form onSubmit={handleSubmit} className="mb-8">
+                <div className="border-b border-gray-400 mb-2">
+                  <input type="number" name="amount" placeholder="Amount" />
+                </div>
 
-              <div className="border-b border-gray-400 mb-2">
-                <select name="bet">
-                  <option value="OVER">Over</option>
-                  <option value="UNDER">Under</option>
-                </select>
-              </div>
+                <div className="border-b border-gray-400 mb-2">
+                  <select name="bet">
+                    <option value="OVER">Over</option>
+                    <option value="UNDER">Under</option>
+                  </select>
+                </div>
 
-              <input type="hidden" name="poolID" value={pool.id} />
-              <input type="hidden" name="better" value={me.name} />
+                <input type="hidden" name="poolID" value={pool.id} />
+                <input type="hidden" name="better" value={me.name} />
 
-              <button type="submit" className="bg-blue-700 rounded-sm px-4 py-2 text-white" value="Submit">
-                Submit
-              </button>
-            </form>
-          </div>
-        ))}
+                <button type="submit" className="bg-blue-700 rounded-sm px-4 py-2 text-white" value="Submit">
+                  Submit
+                </button>
+              </form>
+            </div>
+          ))
+        }
       </div>
     </div>
   );
 }
-
-export default App;
