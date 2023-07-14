@@ -17,7 +17,7 @@ const COLORS = [
 ];
 
 export const PoolBets = (props) => {
-  const { pool, users, type } = props;
+  const { pool, users, type, bets } = props;
 
   // check if pool is over or under
   let poolAmount = 0;
@@ -28,25 +28,9 @@ export const PoolBets = (props) => {
   }
 
   // set state using hooks
-  const [bets, setBets] = useState([]);
   const [balance, setBalance] = useState([]);
   const [centerDisplayNumber, setCenterDisplayNumber] = useState(`Total ${type}`);
   const [centerDisplayLabel, setCenterDisplayLabel] = useState(poolAmount);
-
-  const fetchBets = async () => {
-    // api call
-    const response = await fetch(`http://localhost:8080/pools/${pool.id}/bets`);
-    // check response
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    } else {
-      const json = await response.json();
-      // take only the bets from the side of the pool we want
-      const bets = json.filter((bet) => bet.bet === type.toUpperCase());
-      // set it to state var
-      setBets(bets);
-    }
-  };
 
   const fetchBalance = async () => {
     // api call
@@ -78,7 +62,6 @@ export const PoolBets = (props) => {
 
   // fetch bets and balance on first render
   useEffect(() => {
-    fetchBets();
     fetchBalance();
   }, []);
 
