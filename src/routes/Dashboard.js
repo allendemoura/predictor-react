@@ -1,61 +1,22 @@
-import { useEffect, useState } from "react";
+import { useLoaderData } from "react-router-dom";
 
 const me = {
   name: "Tebbo",
   id: 2,
 };
 
-export const dashboardLoader = async () => {
-  return null;
+export const dashboardLoader = async ({ params }) => {
+  const [users, pools, myBets] = await Promise.all([
+    fetch(`http://localhost:8080/users`).then((res) => res.json()),
+    fetch(`http://localhost:8080/pools/active`).then((res) => res.json()),
+    fetch(`http://localhost:8080/users/${me.id}/bets`).then((res) => res.json()),
+  ]);
+
+  return { users, pools, myBets };
 };
 
 export function Dashboard() {
-  // init state using hooks
-  const [users, setUsers] = useState([]);
-  const [pools, setPools] = useState([]);
-  const [myBets, setMyBets] = useState([]);
-
-  // def functions to fetch data
-  const fetchAllUsers = async () => {
-    const response = await fetch("http://localhost:8080/users");
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    } else {
-      const json = await response.json();
-      setUsers(json);
-    }
-  };
-
-  const fetchAllPools = async () => {
-    const response = await fetch("http://localhost:8080/pools/active");
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    } else {
-      const json = await response.json();
-
-      setPools(json);
-    }
-  };
-
-  const fetchAllMyBets = async () => {
-    const response = await fetch(`http://localhost:8080/users/${me.id}/bets`);
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    } else {
-      const json = await response.json();
-      setMyBets(json);
-    }
-  };
-
-  // Fetch everything on first render
-  useEffect(() => {
-    fetchAllUsers();
-    fetchAllPools();
-    fetchAllMyBets();
-  }, []);
+  const { users, pools, myBets } = useLoaderData();
 
   // function to submit bet from to backend form info
   const handleSubmit = async (event) => {
@@ -87,8 +48,9 @@ export function Dashboard() {
 
       // TODO: update user balance and pool amount on frontend for UI snappiness
 
-      // refresh bet data
-      fetchAllMyBets();
+      // refresh bet data (note by tebbo: this function don't exist anymore. We
+      // will figure it out later. Got removed when i switched to react-router)
+      // fetchAllMyBets();
     }
   };
 
