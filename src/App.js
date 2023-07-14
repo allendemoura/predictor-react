@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import { Pool } from "./Pool.js";
+
 const me = {
   name: "Tebbo",
   id: 2,
@@ -30,9 +32,6 @@ export default function App() {
       throw new Error(`HTTP error! status: ${response.status}`);
     } else {
       const json = await response.json();
-
-      console.log(response);
-      console.log(json);
 
       setPools(json);
     }
@@ -98,7 +97,7 @@ export default function App() {
       <header className="p-4 text-2xl font-bold">Gambol!</header>
 
       {/* user list */}
-      <div class="border-b border-gray-400 p-4">
+      <div className="border-b border-gray-400 p-4">
         <div className="font-bold">All Users</div>
         {
           // loop through users and render them
@@ -111,7 +110,7 @@ export default function App() {
       </div>
 
       {/* list of my bets TODO: change this to active bets*/}
-      <div class="border-b border-gray-400 p-4">
+      <div className="border-b border-gray-400 p-4">
         <div className="font-bold">My Bets</div>
         {
           // loop through bets and render them
@@ -124,7 +123,7 @@ export default function App() {
       </div>
 
       {/* list of all active pools */}
-      <div class="border-b border-gray-400 p-4">
+      <div className="border-b border-gray-400 p-4">
         <div className="font-bold">All Pools</div>
         {
           // loop through pools and render them
@@ -155,6 +154,9 @@ export default function App() {
           ))
         }
       </div>
+
+      {/* preview Pool component */}
+      {pools[0] && <Pool pool={pools[0]} users={users} />}
     </div>
   );
 }
