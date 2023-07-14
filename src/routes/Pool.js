@@ -13,9 +13,9 @@ export const poolLoader = async ({ params }) => {
     fetch(`http://localhost:8080/users`).then((res) => res.json()),
     fetch(`http://localhost:8080/pools/${params.poolId}`).then((res) => res.json()),
     fetch(`http://localhost:8080/pools/${params.poolId}/bets`).then((res) => res.json()),
-  ]);
-
-  console.log(users, pool, bets);
+  ]).catch((error) => {
+    console.error(error);
+  });
 
   return { users, pool, bets };
 };
@@ -23,10 +23,13 @@ export const poolLoader = async ({ params }) => {
 export const Pool = () => {
   const { users, pool, bets } = useLoaderData();
 
+  const underBets = bets.filter((bet) => bet.bet === "UNDER");
+  const overBets = bets.filter((bet) => bet.bet === "OVER");
+
   return (
     <div className="h-screen flex flex-col">
       {/* over display component */}
-      <PoolBets pool={pool} users={users} type="over" bets={bets} />
+      <PoolBets pool={pool} users={users} type="over" bets={overBets} />
 
       {/* point container in center */}
       <div className="h-1/3 bg-gray-400 text-center flex flex-col justify-center">
@@ -44,7 +47,7 @@ export const Pool = () => {
       </div>
 
       {/* under display component */}
-      <PoolBets pool={pool} users={users} type="under" bets={bets} />
+      <PoolBets pool={pool} users={users} type="under" bets={underBets} />
     </div>
   );
 };
