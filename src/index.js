@@ -2,10 +2,17 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn, SignIn, SignUp, UserButton } from "@clerk/clerk-react";
 
 import { AppWrapper } from "./components/AppWrapper";
 import { Dashboard, dashboardLoader } from "./routes/Dashboard";
 import { Pool, poolLoader } from "./routes/Pool";
+
+if (!process.env.REACT_APP_CLERK_PUBLISHABLE_KEY) {
+  throw new Error("Missing Publishable Key");
+}
+
+const clerkPubKey = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY;
 
 const router = createBrowserRouter([
   {
@@ -22,9 +29,11 @@ const router = createBrowserRouter([
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <AppWrapper>
-    <React.StrictMode>
-      <RouterProvider router={router} />
-    </React.StrictMode>
-  </AppWrapper>
+  <React.StrictMode>
+    <ClerkProvider publishableKey={clerkPubKey}>
+      <AppWrapper>
+        <RouterProvider router={router} />
+      </AppWrapper>
+    </ClerkProvider>
+  </React.StrictMode>
 );
