@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 
-import { Pool } from "./Pool.js";
-
 const me = {
   name: "Tebbo",
   id: 2,
 };
 
-export default function App() {
+export const dashboardLoader = async () => {
+  return null;
+};
+
+export function Dashboard() {
   // init state using hooks
   const [users, setUsers] = useState([]);
   const [pools, setPools] = useState([]);
@@ -93,7 +95,7 @@ export default function App() {
   // html to be rendered in browser
   return (
     // mobile optimized tailwind css
-    <div className="w-96 mx-auto border-x border-gray-400 min-h-screen">
+    <>
       <header className="p-4 text-2xl font-bold">Gambol!</header>
 
       {/* user list */}
@@ -128,7 +130,7 @@ export default function App() {
         {
           // loop through pools and render them
           pools.map((pool) => (
-            <div key={pool.id}>
+            <a href={`/pool/${pool.id}`} className="underline text-blue-400" key={pool.id}>
               {pool.desc} <b>{pool.point}</b> Under: {pool.underPool} Over: {pool.overPool}
               {/* generate form for betting on each pool */}
               {/* <form onSubmit={handleSubmit} className="mb-8">
@@ -150,13 +152,10 @@ export default function App() {
                   Submit
                 </button>
               </form> */}
-            </div>
+            </a>
           ))
         }
       </div>
-
-      {/* preview Pool component */}
-      {pools[0] && <Pool pool={pools[0]} users={users} />}
-    </div>
+    </>
   );
 }
