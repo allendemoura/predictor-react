@@ -1,4 +1,5 @@
 import { useLoaderData } from "react-router-dom";
+import { UserButton } from "@clerk/clerk-react";
 
 const me = {
   name: "Tebbo",
@@ -59,6 +60,8 @@ export function Dashboard() {
     // mobile optimized tailwind css
     <>
       <header className="p-4 text-2xl font-bold">Gambol!</header>
+
+      <UserButton />
 
       {/* user list */}
       <div className="border-b border-gray-400 p-4">

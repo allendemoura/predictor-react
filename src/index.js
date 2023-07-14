@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn, SignIn, SignUp, UserButton } from "@clerk/clerk-react";
+import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn, SignIn, SignUp } from "@clerk/clerk-react";
 
 import { AppWrapper } from "./components/AppWrapper";
 import { Dashboard, dashboardLoader } from "./routes/Dashboard";
@@ -19,6 +19,14 @@ const router = createBrowserRouter([
     path: "/",
     element: <Dashboard />,
     loader: dashboardLoader,
+  },
+  {
+    path: "/sign-in/*",
+    element: <SignIn routing="path" path="/sign-in" />,
+  },
+  {
+    path: "/sign-up/*",
+    element: <SignUp routing="path" path="/sign-up" />,
   },
   {
     path: "/pool/:poolId",
