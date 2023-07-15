@@ -8,9 +8,9 @@ const me = {
 
 export const dashboardLoader = async ({ params }) => {
   const [users, pools, myBets] = await Promise.all([
-    fetch(`http://localhost:8080/users`).then((res) => res.json()),
-    fetch(`http://localhost:8080/pools/active`).then((res) => res.json()),
-    fetch(`http://localhost:8080/users/${me.id}/bets`).then((res) => res.json()),
+    fetch(`${process.env.REACT_APP_API_SERVER_URL}/users`).then((res) => res.json()),
+    fetch(`${process.env.REACT_APP_API_SERVER_URL}/pools/active`).then((res) => res.json()),
+    fetch(`${process.env.REACT_APP_API_SERVER_URL}/users/${me.id}/bets`).then((res) => res.json()),
   ]);
 
   return { users, pools, myBets };
@@ -28,9 +28,9 @@ export function Dashboard() {
     const { amount, poolID, bet, better } = event.target.elements;
 
     // send bet to backend
-    const response = await fetch("http://localhost:8080/bets", {
+    const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/bets`, {
       method: "POST",
-      headers: {
+      headrs: {
         "Content-type": "application/json",
       },
       body: JSON.stringify({

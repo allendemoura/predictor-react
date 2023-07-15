@@ -12,6 +12,10 @@ if (!process.env.REACT_APP_CLERK_PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key");
 }
 
+if (!process.env.REACT_APP_API_SERVER_URL) {
+  throw new Error("Missing API Server URL");
+}
+
 const clerkPubKey = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY;
 
 const router = createBrowserRouter([

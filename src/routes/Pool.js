@@ -12,9 +12,9 @@ const me = {
 
 export const poolLoader = async ({ params }) => {
   const [users, pool, bets] = await Promise.all([
-    fetch(`http://localhost:8080/users`).then((res) => res.json()),
-    fetch(`http://localhost:8080/pools/${params.poolId}`).then((res) => res.json()),
-    fetch(`http://localhost:8080/pools/${params.poolId}/bets`).then((res) => res.json()),
+    fetch(`${process.env.REACT_APP_API_SERVER_URL}/users`).then((res) => res.json()),
+    fetch(`${process.env.REACT_APP_API_SERVER_URL}/pools/${params.poolId}`).then((res) => res.json()),
+    fetch(`${process.env.REACT_APP_API_SERVER_URL}/pools/${params.poolId}/bets`).then((res) => res.json()),
   ]).catch((error) => {
     console.error(error);
   });

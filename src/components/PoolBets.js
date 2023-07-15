@@ -36,7 +36,7 @@ export const PoolBets = (props) => {
 
   const fetchBalance = async () => {
     // api call
-    const response = await fetch(`http://localhost:8080/users/${me.id}`);
+    const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/users/${me.id}`);
     // response check
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
