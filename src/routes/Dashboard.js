@@ -97,29 +97,31 @@ export function Dashboard() {
         {
           // loop through pools and render them
           pools.map((pool) => (
-            <a href={`/pool/${pool.id}`} className="underline text-blue-400" key={pool.id}>
-              {pool.desc} <b>{pool.point}</b> Under: {pool.underPool} Over: {pool.overPool}
-              {/* generate form for betting on each pool */}
-              {/* <form onSubmit={handleSubmit} className="mb-8">
-                <div className="border-b border-gray-400 mb-2">
-                  <input type="number" name="amount" placeholder="Amount" />
-                </div>
+            <div>
+              <a href={`/pool/${pool.id}`} className="underline text-blue-400" key={pool.id}>
+                {pool.desc} <b>{pool.point}</b> Under: {pool.underPool} Over: {pool.overPool}
+                {/* generate form for betting on each pool */}
+                {/* <form onSubmit={handleSubmit} className="mb-8">
+                  <div className="border-b border-gray-400 mb-2">
+                    <input type="number" name="amount" placeholder="Amount" />
+                  </div>
 
-                <div className="border-b border-gray-400 mb-2">
-                  <select name="bet">
-                    <option value="OVER">Over</option>
-                    <option value="UNDER">Under</option>
-                  </select>
-                </div>
+                  <div className="border-b border-gray-400 mb-2">
+                    <select name="bet">
+                      <option value="OVER">Over</option>
+                      <option value="UNDER">Under</option>
+                    </select>
+                  </div>
 
-                <input type="hidden" name="poolID" value={pool.id} />
-                <input type="hidden" name="better" value={me.name} />
+                  <input type="hidden" name="poolID" value={pool.id} />
+                  <input type="hidden" name="better" value={me.name} />
 
-                <button type="submit" className="bg-blue-700 rounded-sm px-4 py-2 text-white" value="Submit">
-                  Submit
-                </button>
-              </form> */}
-            </a>
+                  <button type="submit" className="bg-blue-700 rounded-sm px-4 py-2 text-white" value="Submit">
+                    Submit
+                  </button>
+                </form> */}
+              </a>
+            </div>
           ))
         }
       </div>

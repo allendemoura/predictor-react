@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { PoolBets } from "../components/PoolBets.js";
 
+import { AiOutlineArrowUp, AiOutlineArrowDown } from "react-icons/ai";
+
 import { useAuth, RedirectToSignIn } from "@clerk/clerk-react";
 
 import { useLoaderData, useNavigate } from "react-router-dom";
@@ -31,40 +33,31 @@ export const Pool = () => {
   const underBets = bets.filter((bet) => bet.bet === "UNDER");
   const overBets = bets.filter((bet) => bet.bet === "OVER");
 
-  const handleClick = async (e, type) => {
-    if (!userId) navigate("/sign-in");
-
-    console.log(type);
-  };
-
   return (
     <div className="h-screen flex flex-col">
+      <div class="p-4 text-center bg-gray-700 text-xs">
+        {/* display point */}
+        <div className="text-white">{pool.desc}</div>
+      </div>
       {/* over display component */}
       <PoolBets pool={pool} users={users} type="over" bets={overBets} />
 
       {/* point container in center */}
-      <div className="h-1/3 bg-gray-400 text-center flex flex-col justify-center">
-        {/* bet over button */}
-        <button
-          onClick={(e) => handleClick(e, "OVER")}
-          className="bg-blue-500 text-white rounded-md w-32 h-16 mx-auto m-2"
-        >
-          OVER
-        </button>
-
-        {/* display point */}
-        <div className="text-gray-50">{pool.desc}</div>
-
+      <div className="h-4 bg-gray-800 text-center flex flex-col items-center justify-center relative">
         {/* TODO: handle various point sizes dynamically */}
-        <div className="text-8xl text-green-700 font-bold">{pool.point}</div>
-
-        {/* bet under button */}
-        <button
-          onClick={(e) => handleClick(e, "UNDER")}
-          className="bg-red-500 text-white rounded-md w-32 h-16 mx-auto m-2"
-        >
-          UNDER
-        </button>
+        <div class="relative rounded-lg flex flex-col">
+          <button className="w-full px-4 py-3 bg-lime-500 text-white rounded-md flex gap-2">
+            <AiOutlineArrowUp className="relative top-1" />
+            Bet the over
+            <AiOutlineArrowUp className="relative top-1" />
+          </button>
+          <div className="text-6xl font-light font-display py-2 px-6 bg-white rounded-md my-2">{pool.point}</div>
+          <button className="w-full px-4 py-3 bg-red-500 text-white rounded-md flex gap-2">
+            <AiOutlineArrowDown className="relative top-1" />
+            Bet the under
+            <AiOutlineArrowDown className="relative top-1" />
+          </button>
+        </div>
       </div>
 
       {/* under display component */}
