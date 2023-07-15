@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useUser } from "@clerk/clerk-react";
 
 // auth spoof placeholder
 const me = {
@@ -31,6 +32,7 @@ export const PoolBets = (props) => {
   const [balance, setBalance] = useState([]);
   const [centerDisplayNumber, setCenterDisplayNumber] = useState(`Total ${type}`);
   const [centerDisplayLabel, setCenterDisplayLabel] = useState(poolAmount);
+  const user = useUser();
 
   const fetchBalance = async () => {
     // api call

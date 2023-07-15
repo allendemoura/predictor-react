@@ -62,6 +62,7 @@ export function Dashboard() {
       <header className="p-4 text-2xl font-bold">Gambol!</header>
 
       <UserButton />
+      <a href="/sign-in">Sign In</a>
 
       {/* user list */}
       <div className="border-b border-gray-400 p-4">
@@ -81,11 +82,12 @@ export function Dashboard() {
         <div className="font-bold">My Bets</div>
         {
           // loop through bets and render them
-          myBets.map((bet) => (
-            <div key={bet.id}>
-              {bet.poolID} {bet.amount} {bet.bet}
-            </div>
-          ))
+          myBets.map &&
+            myBets.map((bet) => (
+              <div key={bet.id}>
+                {bet.poolID} {bet.amount} {bet.bet}
+              </div>
+            ))
         }
       </div>
 
