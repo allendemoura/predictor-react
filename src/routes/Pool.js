@@ -32,9 +32,9 @@ export const Pool = () => {
   const overBets = bets.filter((bet) => bet.bet === "OVER");
 
   const handleClick = async (e, type) => {
-    console.log(type);
-
     if (!userId) navigate("/sign-in");
+
+    console.log(type);
   };
 
   return (
