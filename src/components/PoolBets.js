@@ -4,7 +4,7 @@ import { useUser } from "@clerk/clerk-react";
 // auth spoof placeholder
 const me = {
   name: "Tebbo",
-  id: 2,
+  id: 12,
 };
 
 // color wheel selected for contrast
