@@ -3,8 +3,9 @@ import { useUser } from "@clerk/clerk-react";
 
 // auth spoof placeholder
 const me = {
-  name: "Tebbo",
-  id: 1234,
+  firstName: "Tebbo",
+  lastName: "the dark lord",
+  id: "darkness",
 };
 
 // color wheel selected for contrast
@@ -54,7 +55,7 @@ export const PoolBets = (props) => {
 
     // const user = users.filter((user) => user.id === bet.betterID)[0];
 
-    setCenterDisplayLabel(element.dataset.name);
+    setCenterDisplayLabel(element.dataset.firstName);
     setCenterDisplayNumber(element.dataset.amount);
   };
 

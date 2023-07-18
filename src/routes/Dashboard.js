@@ -1,9 +1,11 @@
 import { useLoaderData } from "react-router-dom";
 import { UserButton } from "@clerk/clerk-react";
 
+//  auth spoof placeholder
 const me = {
-  name: "Tebbo",
-  id: 2,
+  firstName: "Tebbo",
+  lastName: "the dark lord",
+  id: "darkness",
 };
 
 export const dashboardLoader = async ({ params }) => {
@@ -71,7 +73,7 @@ export function Dashboard() {
           // loop through users and render them
           users.map((user) => (
             <div key={user.id}>
-              {user.name} {user.balance}
+              {user.firstName} {user.lastName}: {user.balance}
             </div>
           ))
         }
