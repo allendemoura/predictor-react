@@ -54,14 +54,14 @@ export const PoolBets = (props) => {
     if (element.dataset.type !== type) return;
 
     // const user = users.filter((user) => user.id === bet.betterID)[0];
-    setCenterDisplayLabel(element.dataset.name);
-    setCenterDisplayNumber(element.dataset.amount);
+    setCenterDisplayLabel(element.dataset.amount);
+    setCenterDisplayNumber(element.dataset.name);
   };
 
   // reset display to default on mouse leave
   const handleTouchEnd = (e) => {
-    setCenterDisplayLabel(`Total of ${type} bets`);
-    setCenterDisplayNumber(poolAmount);
+    setCenterDisplayLabel(poolAmount);
+    setCenterDisplayNumber(`Total of ${type} bets`);
   };
 
   // fetch bets and balance on first render
