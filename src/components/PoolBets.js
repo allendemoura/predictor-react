@@ -54,8 +54,8 @@ export const PoolBets = (props) => {
     if (element.dataset.type !== type) return;
 
     // const user = users.filter((user) => user.id === bet.betterID)[0];
-
-    setCenterDisplayLabel(element.dataset.firstName);
+    console.log(element.dataset);
+    setCenterDisplayLabel(element.dataset.name);
     setCenterDisplayNumber(element.dataset.amount);
   };
 
@@ -96,13 +96,13 @@ export const PoolBets = (props) => {
         onTouchMove={(e) => handleTouchMove(e, type)}
       >
         {/* loop out all the bets for the given side of the pool */}
-        {bets.map((bet, index) => {
+        {pool.bets.map((bet, index) => {
           return (
             // makes a proportionate section of the bar for each bet
             <div
               key={bet.id}
               className="w-full border-transparent relative"
-              data-name={bet.betterID}
+              data-name={`${bet.better.firstName} ${bet.better.lastName}`}
               data-amount={bet.amount}
               data-type={type}
               style={{
