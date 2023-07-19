@@ -54,7 +54,6 @@ export const PoolBets = (props) => {
     if (element.dataset.type !== type) return;
 
     // const user = users.filter((user) => user.id === bet.betterID)[0];
-    console.log(element.dataset);
     setCenterDisplayLabel(element.dataset.name);
     setCenterDisplayNumber(element.dataset.amount);
   };
