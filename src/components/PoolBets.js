@@ -32,10 +32,14 @@ export const PoolBets = (props) => {
   const [centerDisplayNumber, setCenterDisplayNumber] = useState(`Total of ${type} bets`);
   const [centerDisplayLabel, setCenterDisplayLabel] = useState(poolAmount);
   const user = useUser();
-
+  let loggedInUser = null;
+  if (user.isLoaded && user.isSignedIn) {
+    // const { firstName, lastName, fullName, id } = user.user;  }
+    loggedInUser = user.user;
+  }
   const fetchBalance = async () => {
     // api call
-    const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/users/${me.id}`);
+    const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/users/${loggedInUser.id}`);
     // response check
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -76,7 +80,7 @@ export const PoolBets = (props) => {
         {type === "over" ? (
           <>
             {/* bet over button */}
-            <div className="text-3xl font-display font-light">{centerDisplayLabel}</div>
+            <div className="text-4xl font-display font-light">{centerDisplayLabel}</div>
             <div>{centerDisplayNumber}</div>
           </>
         ) : (

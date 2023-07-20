@@ -3,7 +3,7 @@ import { PoolBets } from "../components/PoolBets.js";
 
 import { AiOutlineArrowUp, AiOutlineArrowDown } from "react-icons/ai";
 
-import { useAuth, RedirectToSignIn } from "@clerk/clerk-react";
+import { useAuth, useUser, RedirectToSignIn } from "@clerk/clerk-react";
 
 import { useLoaderData, useNavigate } from "react-router-dom";
 
@@ -29,6 +29,15 @@ export const Pool = () => {
 
   const navigate = useNavigate();
   const { userId } = useAuth();
+  const user = useUser();
+  let loggedInUser = null;
+  let balance = 0;
+  if (user.isLoaded && user.isSignedIn) {
+    // const { firstName, lastName, fullName, id } = user.user;  }
+    loggedInUser = user.user;
+    loggedInUser.balance = users.filter((user) => user.id === loggedInUser.id)[0].balance;
+    console.log("balance", loggedInUser.balance);
+  }
 
   const underBets = bets.filter((bet) => bet.bet === "UNDER");
   const overBets = bets.filter((bet) => bet.bet === "OVER");
@@ -36,8 +45,7 @@ export const Pool = () => {
   return (
     <div className="h-screen flex flex-col">
       <div class="p-4 text-center bg-gray-700 text-xs">
-        {/* display point */}
-        <div className="text-white">{pool.desc}</div>
+        {/* user balance */ loggedInUser && <div className="text-white">Your funds: {loggedInUser.balance}</div>}
       </div>
       {/* over display component */}
       <PoolBets pool={pool} users={users} type="over" bets={overBets} />
@@ -62,6 +70,10 @@ export const Pool = () => {
 
       {/* under display component */}
       <PoolBets pool={pool} users={users} type="under" bets={underBets} />
+      <div class="p-4 text-center bg-gray-700 text-xs">
+        {/* pool desc */}
+        <div className="text-white">{pool.desc}</div>
+      </div>
     </div>
   );
 };
