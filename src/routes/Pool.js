@@ -29,6 +29,7 @@ export const Pool = () => {
 
   const navigate = useNavigate();
   const { userId } = useAuth();
+  const [betting, setBetting] = useState(false);
   const user = useUser();
   let loggedInUser = null;
   let balance = 0;
@@ -42,24 +43,45 @@ export const Pool = () => {
   const underBets = bets.filter((bet) => bet.bet === "UNDER");
   const overBets = bets.filter((bet) => bet.bet === "OVER");
 
+  function betClickHandler() {
+    setBetting(!betting);
+  }
+
+  let button;
+  if (betting) {
+    button = (
+      <button className="w-full px-4 py-3 bg-lime-500 text-white rounded-md flex gap-2" onClick={betClickHandler}>
+        - amount +
+      </button>
+    );
+  } else {
+    button = (
+      <button className="w-full px-4 py-3 bg-lime-500 text-white rounded-md flex gap-2" onClick={betClickHandler}>
+        <AiOutlineArrowUp className="relative top-1" />
+        Bet the over
+        <AiOutlineArrowUp className="relative top-1" />
+      </button>
+    );
+  }
+
   return (
     <div className="h-screen flex flex-col">
       <div class="p-4 text-center bg-gray-700 text-xs">
         {/* user balance */ loggedInUser && <div className="text-white">Your funds: {loggedInUser.balance}</div>}
       </div>
+
       {/* over display component */}
       <PoolBets pool={pool} users={users} type="over" bets={overBets} />
 
-      {/* point container in center */}
+      {/* center display */}
       <div className="h-4 bg-gray-800 text-center flex flex-col items-center justify-center relative">
-        {/* TODO: handle various point sizes dynamically */}
         <div class="relative rounded-lg flex flex-col">
-          <button className="w-full px-4 py-3 bg-lime-500 text-white rounded-md flex gap-2">
-            <AiOutlineArrowUp className="relative top-1" />
-            Bet the over
-            <AiOutlineArrowUp className="relative top-1" />
-          </button>
+          {/* over button */}
+          {button}
+          {/* point number display TODO: handle various point sizes dynamically */}
           <div className="text-6xl font-light font-display py-2 px-6 bg-white rounded-md my-2">{pool.point}</div>
+
+          {/* under button */}
           <button className="w-full px-4 py-3 bg-red-500 text-white rounded-md flex gap-2">
             <AiOutlineArrowDown className="relative top-1" />
             Bet the under
@@ -70,8 +92,9 @@ export const Pool = () => {
 
       {/* under display component */}
       <PoolBets pool={pool} users={users} type="under" bets={underBets} />
+
+      {/* pool desc */}
       <div class="p-4 text-center bg-gray-700 text-xs">
-        {/* pool desc */}
         <div className="text-white">{pool.desc}</div>
       </div>
     </div>
