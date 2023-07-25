@@ -24,11 +24,11 @@ export const PoolBets = (props) => {
   let ratio = 0;
   let winnings = 0;
   if (type === "over") {
-    poolAmount = pool.overPool;
+    poolAmount = pool.overPool + userBet;
     ratio = userBet / (poolAmount + userBet);
     winnings = Math.round(ratio * pool.underPool);
   } else {
-    poolAmount = pool.underPool;
+    poolAmount = pool.underPool + userBet;
     ratio = userBet / (poolAmount + userBet);
     winnings = Math.round(ratio * pool.overPool);
   }
