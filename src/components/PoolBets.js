@@ -26,13 +26,12 @@ export const PoolBets = (props) => {
   if (type === "over") {
     poolAmount = pool.overPool;
     ratio = userBet / (poolAmount + userBet);
-    winnings = ratio * pool.underPool;
+    winnings = Math.round(ratio * pool.underPool);
   } else {
     poolAmount = pool.underPool;
     ratio = userBet / (poolAmount + userBet);
-    winnings = ratio * pool.overPool;
+    winnings = Math.round(ratio * pool.overPool);
   }
-
   // set state using hooks
   const [balance, setBalance] = useState([]);
   const [centerDisplayLabel, setCenterDisplayNumber] = useState(`Total of ${type} bets`);
@@ -86,9 +85,9 @@ export const PoolBets = (props) => {
         {type === "over" ? (
           <>
             {/*  over  */}
-            <div>Percent of pot: {ratio * 100}</div>
+            <div>Pot Share: {Math.floor(ratio * 100)}%</div>
             <div>Potential Winnings: {winnings}</div>
-            <div className="text-4xl font-display font-light">{centerDisplayNumber + userBet}</div>
+            <div className="text-4xl font-display font-light">{centerDisplayNumber}</div>
             <div>{centerDisplayLabel}</div>
           </>
         ) : (
@@ -102,7 +101,7 @@ export const PoolBets = (props) => {
 
       {/* bet bar selector display */}
       <div
-        className="w-4 h-full bg-gray-300 ml-auto flex flex-col align-end"
+        className="w-5 h-full bg-gray-300 ml-auto flex flex-col align-end"
         onTouchEnd={handleTouchEnd}
         onTouchMove={(e) => handleTouchMove(e, type)}
       >
