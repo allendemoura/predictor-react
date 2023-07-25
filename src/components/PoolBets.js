@@ -88,26 +88,49 @@ export const PoolBets = (props) => {
         )}
 
         {isBetting ? (
-          <>
-            <button className="w-full px-4 py-3 bg-orange-700 text-white rounded-lg gap-2 text-center my-1">
-              SHIP IT
-            </button>
-            <div className="w-full px-4 py-3 bg-lime-500 text-white rounded-md flex gap-2">
-              <button
-                className="w-1/4 border-2 border-black border-solid text-2xl mx-auto"
-                onClick={handleDecrementBet}
-              >
-                -
+          type === "over" ? (
+            <>
+              <button className="w-full px-4 py-3 bg-orange-700 text-white rounded-lg gap-2 text-center my-1">
+                SHIP IT
               </button>
-              <div onClick={handleCloseBetForm}>{betAmount}</div>
-              <button
-                className="w-1/4 border-2 border-black border-solid text-2xl mx-auto"
-                onClick={handleIncrementBet}
-              >
-                +
+              <div className="w-full px-4 py-3 bg-lime-500 text-white rounded-md flex gap-2">
+                <button
+                  className="w-1/4 border-2 border-black border-solid text-2xl mx-auto"
+                  onClick={handleDecrementBet}
+                >
+                  -
+                </button>
+                <div onClick={handleCloseBetForm}>{betAmount}</div>
+                <button
+                  className="w-1/4 border-2 border-black border-solid text-2xl mx-auto"
+                  onClick={handleIncrementBet}
+                >
+                  +
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="w-full px-4 py-3 bg-red-500 text-white rounded-md flex gap-2">
+                <button
+                  className="w-1/4 border-2 border-black border-solid text-2xl mx-auto"
+                  onClick={handleDecrementBet}
+                >
+                  -
+                </button>
+                <div onClick={handleCloseBetForm}>{betAmount}</div>
+                <button
+                  className="w-1/4 border-2 border-black border-solid text-2xl mx-auto"
+                  onClick={handleIncrementBet}
+                >
+                  +
+                </button>
+              </div>
+              <button className="w-full px-4 py-3 bg-orange-700 text-white rounded-lg gap-2 text-center my-1">
+                SHIP IT
               </button>
-            </div>
-          </>
+            </>
+          )
         ) : type === "over" ? (
           <button className="w-full px-4 py-3 bg-lime-500 text-white rounded-md flex gap-2" onClick={handleOpenBetForm}>
             <AiOutlineArrowUp className="relative top-1" />
