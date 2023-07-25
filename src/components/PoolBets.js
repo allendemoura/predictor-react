@@ -1,12 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { useUser } from "@clerk/clerk-react";
+import React, { useState } from "react";
 
-// auth spoof placeholder
-const me = {
-  firstName: "Tebbo",
-  lastName: "the dark lord",
-  id: "darkness",
-};
+import { AiOutlineArrowUp, AiOutlineArrowDown } from "react-icons/ai";
 
 // color wheel selected for contrast
 
@@ -15,45 +9,22 @@ const OVER_COLORS = ["#4d7c0f", "#84cc16", "#bef264", "#84cc16", "#4d7c0f", "#36
 const UNDER_COLORS = ["#b91c1c", "#ef4444", "#fca5a5", "#ef4444", "#b91c1c", "#7f1d1d"];
 
 export const PoolBets = (props) => {
-  const { pool, users, type, bets, userBet } = props;
+  const { pool, type, user } = props;
 
   const COLORS = type === "over" ? OVER_COLORS : UNDER_COLORS;
 
-  // check if pool is over or under
-  let poolAmount = 0;
-  let ratio = 0;
-  let winnings = 0;
-  if (type === "over") {
-    poolAmount = pool.overPool + userBet;
-    ratio = userBet / (poolAmount + userBet);
-    winnings = Math.round(ratio * pool.underPool);
-  } else {
-    poolAmount = pool.underPool + userBet;
-    ratio = userBet / (poolAmount + userBet);
-    winnings = Math.round(ratio * pool.overPool);
-  }
   // set state using hooks
-  const [balance, setBalance] = useState([]);
-  const [centerDisplayLabel, setCenterDisplayNumber] = useState(`Total of ${type} bets`);
-  const [centerDisplayNumber, setCenterDisplayLabel] = useState(poolAmount);
-  const user = useUser();
-  let loggedInUser = null;
-  if (user.isLoaded && user.isSignedIn) {
-    // const { firstName, lastName, fullName, id } = user.user;  }
-    loggedInUser = user.user;
-  }
-  const fetchBalance = async () => {
-    // api call
-    const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/users/${loggedInUser.id}`);
-    // response check
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    } else {
-      const json = await response.json();
-      // set balance to state var
-      setBalance(json.balance);
-    }
-  };
+  const [isBetting, setIsBetting] = useState(false);
+  const [betAmount, setBetAmount] = useState(0);
+
+  // check if pool is over or under
+  const poolAmount = (type === "over" ? pool.overPool : pool.underPool) + betAmount;
+  const ratio = betAmount / (poolAmount + betAmount);
+  const winnings = Math.round(ratio * (type === "over" ? pool.underPool : pool.overPool)) + betAmount;
+
+  const [isHovering, setIsHovering] = useState(false);
+  const [hoveredUserName, setHoveredUserName] = useState(``);
+  const [hoveredUserBet, setHoveredUserBet] = useState(0);
 
   // display bet info on hover
   const handleTouchMove = (e) => {
@@ -62,40 +33,93 @@ export const PoolBets = (props) => {
     if (!element) return;
     if (element.dataset.type !== type) return;
 
-    // const user = users.filter((user) => user.id === bet.betterID)[0];
-    setCenterDisplayLabel(element.dataset.amount);
-    setCenterDisplayNumber(element.dataset.name);
+    setIsHovering(true);
+    setHoveredUserName(element.dataset.name);
+    setHoveredUserBet(element.dataset.amount);
   };
 
   // reset display to default on mouse leave
-  const handleTouchEnd = (e) => {
-    setCenterDisplayLabel(poolAmount);
-    setCenterDisplayNumber(`Total of ${type} bets`);
+  const handleTouchEnd = () => {
+    setIsHovering(false);
   };
 
-  // fetch bets and balance on first render
-  useEffect(() => {
-    // fetchBalance();
-  }, []);
+  function handleOpenBetForm() {
+    setIsBetting(true);
+  }
+
+  function handleCloseBetForm() {
+    setIsBetting(false);
+    setBetAmount(0);
+  }
+
+  function handleIncrementBet() {
+    if (betAmount < user.balance) {
+      setBetAmount(betAmount + 1);
+    }
+  }
+
+  function handleDecrementBet() {
+    if (betAmount > 0) {
+      setBetAmount(betAmount - 1);
+    }
+  }
 
   return (
     <div className={`h-1/2 touch-none	flex ${type === "over" ? "bg-lime-100" : "bg-red-100"}`}>
       {/* center display that will show total by default and show individual bets on hover over the bar segments */}
       <div className="text-black text-center h-full grow flex flex-col items-center justify-center">
-        {type === "over" ? (
+        {isBetting && (
           <>
-            {/*  over  */}
             <div>Pot Share: {Math.floor(ratio * 100)}%</div>
-            <div>Potential Winnings: {winnings}</div>
-            <div className="text-4xl font-display font-light">{centerDisplayNumber}</div>
-            <div>{centerDisplayLabel}</div>
+            <div>Minimum Winnings: {winnings}</div>
+          </>
+        )}
+
+        {isHovering ? (
+          <>
+            <div className="text-4xl font-display font-light">{hoveredUserBet}</div>
+            <div>{hoveredUserName}</div>
           </>
         ) : (
           <>
-            {/*  under  */}
-            <div>{centerDisplayLabel}</div>
-            <div className="text-4xl font-display font-light">{centerDisplayNumber}</div>
+            <div className="text-4xl font-display font-light">{poolAmount}</div>
+            <div>Total of {type} bets</div>
           </>
+        )}
+
+        {isBetting ? (
+          <>
+            <button className="w-full px-4 py-3 bg-orange-700 text-white rounded-lg gap-2 text-center my-1">
+              SHIP IT
+            </button>
+            <div className="w-full px-4 py-3 bg-lime-500 text-white rounded-md flex gap-2">
+              <button
+                className="w-1/4 border-2 border-black border-solid text-2xl mx-auto"
+                onClick={handleDecrementBet}
+              >
+                -
+              </button>
+              <div onClick={handleCloseBetForm}>{betAmount}</div>
+              <button
+                className="w-1/4 border-2 border-black border-solid text-2xl mx-auto"
+                onClick={handleIncrementBet}
+              >
+                +
+              </button>
+            </div>
+          </>
+        ) : type === "over" ? (
+          <button className="w-full px-4 py-3 bg-lime-500 text-white rounded-md flex gap-2" onClick={handleOpenBetForm}>
+            <AiOutlineArrowUp className="relative top-1" />
+            Bet the over
+            <AiOutlineArrowUp className="relative top-1" />
+          </button>
+        ) : (
+          <button className="w-full px-4 py-3 bg-red-500 text-white rounded-md flex gap-2" onClick={handleOpenBetForm}>
+            <AiOutlineArrowDown className="relative top-1" />
+            Bet the under
+            <AiOutlineArrowDown className="relative top-1" />
+          </button>
         )}
       </div>
 
@@ -129,11 +153,11 @@ export const PoolBets = (props) => {
         <div
           key={"user"}
           className="w-full border-transparent relative"
-          data-name={`${loggedInUser.firstName} ${loggedInUser.lastName}`}
-          data-amount={userBet}
+          data-name={`${user.firstName} ${user.lastName}`}
+          data-amount={betAmount}
           data-type={type}
           style={{
-            height: `${(userBet / poolAmount) * 100}%`, // proportionate height calculated as percentage of total pool
+            height: `${(betAmount / poolAmount) * 100}%`, // proportionate height calculated as percentage of total pool
             backgroundColor: "orange", // cycle through colors selected for constrast adjacency
           }}
         ></div>
