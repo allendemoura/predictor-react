@@ -15,22 +15,28 @@ const OVER_COLORS = ["#4d7c0f", "#84cc16", "#bef264", "#84cc16", "#4d7c0f", "#36
 const UNDER_COLORS = ["#b91c1c", "#ef4444", "#fca5a5", "#ef4444", "#b91c1c", "#7f1d1d"];
 
 export const PoolBets = (props) => {
-  const { pool, users, type, bets } = props;
+  const { pool, users, type, bets, userBet } = props;
 
   const COLORS = type === "over" ? OVER_COLORS : UNDER_COLORS;
 
   // check if pool is over or under
   let poolAmount = 0;
+  let ratio = 0;
+  let winnings = 0;
   if (type === "over") {
     poolAmount = pool.overPool;
+    ratio = userBet / (poolAmount + userBet);
+    winnings = ratio * pool.underPool;
   } else {
     poolAmount = pool.underPool;
+    ratio = userBet / (poolAmount + userBet);
+    winnings = ratio * pool.overPool;
   }
 
   // set state using hooks
   const [balance, setBalance] = useState([]);
-  const [centerDisplayNumber, setCenterDisplayNumber] = useState(`Total of ${type} bets`);
-  const [centerDisplayLabel, setCenterDisplayLabel] = useState(poolAmount);
+  const [centerDisplayLabel, setCenterDisplayNumber] = useState(`Total of ${type} bets`);
+  const [centerDisplayNumber, setCenterDisplayLabel] = useState(poolAmount);
   const user = useUser();
   let loggedInUser = null;
   if (user.isLoaded && user.isSignedIn) {
@@ -79,15 +85,17 @@ export const PoolBets = (props) => {
       <div className="text-black text-center h-full grow flex flex-col items-center justify-center">
         {type === "over" ? (
           <>
-            {/* bet over button */}
-            <div className="text-4xl font-display font-light">{centerDisplayLabel}</div>
-            <div>{centerDisplayNumber}</div>
+            {/*  over  */}
+            <div>Percent of pot: {ratio * 100}</div>
+            <div>Potential Winnings: {winnings}</div>
+            <div className="text-4xl font-display font-light">{centerDisplayNumber + userBet}</div>
+            <div>{centerDisplayLabel}</div>
           </>
         ) : (
           <>
-            {/* bet under button */}
-            <div>{centerDisplayNumber}</div>
-            <div className="text-4xl font-display font-light">{centerDisplayLabel}</div>
+            {/*  under  */}
+            <div>{centerDisplayLabel}</div>
+            <div className="text-4xl font-display font-light">{centerDisplayNumber}</div>
           </>
         )}
       </div>
@@ -99,22 +107,37 @@ export const PoolBets = (props) => {
         onTouchMove={(e) => handleTouchMove(e, type)}
       >
         {/* loop out all the bets for the given side of the pool */}
-        {pool.bets.map((bet, index) => {
-          return (
-            // makes a proportionate section of the bar for each bet
-            <div
-              key={bet.id}
-              className="w-full border-transparent relative"
-              data-name={`${bet.better.firstName} ${bet.better.lastName}`}
-              data-amount={bet.amount}
-              data-type={type}
-              style={{
-                height: `${(bet.amount / poolAmount) * 100}%`, // proportionate height calculated as percentage of total pool
-                backgroundColor: COLORS[index % COLORS.length], // cycle through colors selected for constrast adjacency
-              }}
-            ></div>
-          );
-        })}
+        {pool.bets
+          .filter((bet) => bet.bet === type.toUpperCase())
+          .map((bet, index) => {
+            // {pool.bets.map((bet, index) => {
+            return (
+              // makes a proportionate section of the bar for each bet
+              <div
+                key={bet.id}
+                className="w-full border-transparent relative"
+                data-name={`${bet.better.firstName} ${bet.better.lastName}`}
+                data-amount={bet.amount}
+                data-type={type}
+                style={{
+                  height: `${(bet.amount / poolAmount) * 100}%`, // proportionate height calculated as percentage of total pool
+                  backgroundColor: COLORS[index % COLORS.length], // cycle through colors selected for constrast adjacency
+                }}
+              ></div>
+            );
+          })}
+        {/* user bet preview bar */}
+        <div
+          key={"user"}
+          className="w-full border-transparent relative"
+          data-name={`${loggedInUser.firstName} ${loggedInUser.lastName}`}
+          data-amount={userBet}
+          data-type={type}
+          style={{
+            height: `${(userBet / poolAmount) * 100}%`, // proportionate height calculated as percentage of total pool
+            backgroundColor: "orange", // cycle through colors selected for constrast adjacency
+          }}
+        ></div>
       </div>
     </div>
   );

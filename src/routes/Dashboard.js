@@ -99,7 +99,7 @@ export function Dashboard() {
         {
           // loop through pools and render them
           pools.map((pool) => (
-            <div>
+            <div key={pool.id}>
               <a href={`/pool/${pool.id}`} className="underline text-blue-400" key={pool.id}>
                 {pool.desc} <b>{pool.point}</b> Under: {pool.underPool} Over: {pool.overPool}
                 {/* generate form for betting on each pool */}
