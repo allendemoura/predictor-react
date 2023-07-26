@@ -175,6 +175,23 @@ export const PoolBets = (props) => {
         onTouchMove={(e) => handleTouchMove(e, type)}
       >
         {
+          // user bet preview bar for under bets
+          type === "under" && user && (
+            <div
+              key={"overUserBet"}
+              className="w-full border-transparent relative"
+              data-name={`${user.firstName} ${user.lastName}`}
+              data-amount={betAmount}
+              data-type={type}
+              style={{
+                height: `${(betAmount / poolAmount) * 100}%`, // proportionate height calculated as percentage of total pool
+                backgroundColor: "orange", // cycle through colors selected for constrast adjacency
+              }}
+            ></div>
+          )
+        }
+
+        {
           // loop out all the bets for the given side of the pool and render them
           bets.map((bet, index) => {
             return (
@@ -193,10 +210,10 @@ export const PoolBets = (props) => {
             );
           })
         }
-        {/* user bet preview bar */}
-        {user && (
+        {/* user bet preview bar for over bets*/}
+        {type === "over" && user && (
           <div
-            key={"user"}
+            key={"underUserBet"}
             className="w-full border-transparent relative"
             data-name={`${user.firstName} ${user.lastName}`}
             data-amount={betAmount}
