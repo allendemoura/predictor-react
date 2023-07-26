@@ -12,6 +12,7 @@ export const dashboardLoader = async ({ params }) => {
   const [users, pools, myBets] = await Promise.all([
     fetch(`${process.env.REACT_APP_API_SERVER_URL}/users`).then((res) => res.json()),
     fetch(`${process.env.REACT_APP_API_SERVER_URL}/pools/active`).then((res) => res.json()),
+    // TODO: use real auth instead of spoof for this (need global state?)
     fetch(`${process.env.REACT_APP_API_SERVER_URL}/users/${me.id}/bets`).then((res) => res.json()),
   ]);
 
