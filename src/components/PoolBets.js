@@ -2,37 +2,43 @@ import React, { useState } from "react";
 
 import { AiOutlineArrowUp, AiOutlineArrowDown } from "react-icons/ai";
 
-// color wheel selected for contrast
-
+// color wheels selected for contrast
 const OVER_COLORS = ["#4d7c0f", "#84cc16", "#bef264", "#84cc16", "#4d7c0f", "#365314"];
-
-const UNDER_COLORS = ["#b91c1c", "#ef4444", "#fca5a5", "#ef4444", "#b91c1c", "#7f1d1d"];
+const UNDER_COLORS = ["#fca5a5", "#f87171", "#dc2626", "#991b1b", "#450a0a"];
 
 export const PoolBets = (props) => {
+  // destructure props into vars
   const { pool, type, user } = props;
 
+  // set color wheel based on pool type
   const COLORS = type === "over" ? OVER_COLORS : UNDER_COLORS;
 
   // set state using hooks
   const [isBetting, setIsBetting] = useState(false);
   const [betAmount, setBetAmount] = useState(0);
-
-  // check if pool is over or under
-  const poolAmount = (type === "over" ? pool.overPool : pool.underPool) + betAmount;
-  const ratio = betAmount / (poolAmount + betAmount);
-  const winnings = Math.round(ratio * (type === "over" ? pool.underPool : pool.overPool)) + betAmount;
-
   const [isHovering, setIsHovering] = useState(false);
   const [hoveredUserName, setHoveredUserName] = useState(``);
   const [hoveredUserBet, setHoveredUserBet] = useState(0);
 
+  // check if pool is over or under set vars accordingly
+  const poolAmount = (type === "over" ? pool.overPool : pool.underPool) + betAmount;
+  const ratio = betAmount / (poolAmount + betAmount);
+  const winnings = Math.round(ratio * (type === "over" ? pool.underPool : pool.overPool)) + betAmount;
+  // filter for only bets of the given type and reverse the array order if under for design symmetry
+  const bets =
+    type === "over"
+      ? pool.bets.filter((bet) => bet.bet === type.toUpperCase())
+      : pool.bets.filter((bet) => bet.bet === type.toUpperCase()).toReversed();
+
   // display bet info on hover
   const handleTouchMove = (e) => {
+    // get element at touch location
     const element = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
 
     if (!element) return;
     if (element.dataset.type !== type) return;
 
+    // set state to display bet info
     setIsHovering(true);
     setHoveredUserName(element.dataset.name);
     setHoveredUserBet(element.dataset.amount);
@@ -43,8 +49,16 @@ export const PoolBets = (props) => {
     setIsHovering(false);
   };
 
+  // bet button click handlers
   function handleOpenBetForm() {
-    setIsBetting(true);
+    if (user) {
+      setIsBetting(true);
+    } else {
+      // redirect to sign in page if not logged in using react router
+      // TODO: figure out how to do this with clerk?
+      // TODO: do this properly with react router?
+      window.location.href = "/sign-in";
+    }
   }
 
   function handleCloseBetForm() {
@@ -52,6 +66,7 @@ export const PoolBets = (props) => {
     setBetAmount(0);
   }
 
+  // plus and minus button handlers
   function handleIncrementBet() {
     if (betAmount < user.balance) {
       setBetAmount(betAmount + 1);
@@ -66,8 +81,8 @@ export const PoolBets = (props) => {
 
   return (
     <div className={`h-1/2 touch-none	flex ${type === "over" ? "bg-lime-100" : "bg-red-100"}`}>
-      {/* center display that will show total by default and show individual bets on hover over the bar segments */}
       <div className="text-black text-center h-full grow flex flex-col items-center justify-center">
+        {/* display winnings info if bet form is open */}
         {isBetting && (
           <>
             <div>Pot Share: {Math.floor(ratio * 100)}%</div>
@@ -75,19 +90,23 @@ export const PoolBets = (props) => {
           </>
         )}
 
+        {/* display individual bet info on bar hover */}
         {isHovering ? (
           <>
             <div className="text-4xl font-display font-light">{hoveredUserBet}</div>
             <div>{hoveredUserName}</div>
           </>
         ) : (
+          // else default to total bets
           <>
             <div className="text-4xl font-display font-light">{poolAmount}</div>
             <div>Total of {type} bets</div>
           </>
         )}
 
+        {/* transform to bet form buttons if bet button is clicked */}
         {isBetting ? (
+          // green over version of transformed betting form buttons
           type === "over" ? (
             <>
               <button className="w-full px-4 py-3 bg-orange-700 text-white rounded-lg gap-2 text-center my-1">
@@ -110,6 +129,7 @@ export const PoolBets = (props) => {
               </div>
             </>
           ) : (
+            // red under version of transformed betting form buttons
             <>
               <div className="w-full px-4 py-3 bg-red-500 text-white rounded-md flex gap-2">
                 <button
@@ -131,13 +151,15 @@ export const PoolBets = (props) => {
               </button>
             </>
           )
-        ) : type === "over" ? (
+        ) : // green over version of default bet button
+        type === "over" ? (
           <button className="w-full px-4 py-3 bg-lime-500 text-white rounded-md flex gap-2" onClick={handleOpenBetForm}>
             <AiOutlineArrowUp className="relative top-1" />
             Bet the over
             <AiOutlineArrowUp className="relative top-1" />
           </button>
         ) : (
+          // red under version of default bet button
           <button className="w-full px-4 py-3 bg-red-500 text-white rounded-md flex gap-2" onClick={handleOpenBetForm}>
             <AiOutlineArrowDown className="relative top-1" />
             Bet the under
@@ -152,11 +174,9 @@ export const PoolBets = (props) => {
         onTouchEnd={handleTouchEnd}
         onTouchMove={(e) => handleTouchMove(e, type)}
       >
-        {/* loop out all the bets for the given side of the pool */}
-        {pool.bets
-          .filter((bet) => bet.bet === type.toUpperCase())
-          .map((bet, index) => {
-            // {pool.bets.map((bet, index) => {
+        {
+          // loop out all the bets for the given side of the pool and render them
+          bets.map((bet, index) => {
             return (
               // makes a proportionate section of the bar for each bet
               <div
@@ -171,19 +191,22 @@ export const PoolBets = (props) => {
                 }}
               ></div>
             );
-          })}
+          })
+        }
         {/* user bet preview bar */}
-        <div
-          key={"user"}
-          className="w-full border-transparent relative"
-          data-name={`${user.firstName} ${user.lastName}`}
-          data-amount={betAmount}
-          data-type={type}
-          style={{
-            height: `${(betAmount / poolAmount) * 100}%`, // proportionate height calculated as percentage of total pool
-            backgroundColor: "orange", // cycle through colors selected for constrast adjacency
-          }}
-        ></div>
+        {user && (
+          <div
+            key={"user"}
+            className="w-full border-transparent relative"
+            data-name={`${user.firstName} ${user.lastName}`}
+            data-amount={betAmount}
+            data-type={type}
+            style={{
+              height: `${(betAmount / poolAmount) * 100}%`, // proportionate height calculated as percentage of total pool
+              backgroundColor: "orange", // cycle through colors selected for constrast adjacency
+            }}
+          ></div>
+        )}
       </div>
     </div>
   );
