@@ -67,6 +67,7 @@ export const PoolBets = (props) => {
   }
 
   // plus and minus button handlers
+  // TODO: make this work when held down
   function handleIncrementBet() {
     if (betAmount < user.balance) {
       setBetAmount(betAmount + 1);
