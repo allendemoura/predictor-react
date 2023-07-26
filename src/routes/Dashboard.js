@@ -1,5 +1,5 @@
 import { useLoaderData } from "react-router-dom";
-import { UserButton } from "@clerk/clerk-react";
+import { UserButton, useUser } from "@clerk/clerk-react";
 
 //  auth spoof placeholder
 const me = {
@@ -20,6 +20,14 @@ export const dashboardLoader = async ({ params }) => {
 
 export function Dashboard() {
   const { users, pools, myBets } = useLoaderData();
+
+  const currentUser = useUser();
+
+  // if logged in, store logged in user in variable and add balance to it
+  let loggedInUser = null;
+  if (currentUser.isLoaded && currentUser.isSignedIn) {
+    loggedInUser = users.filter((user) => user.id === currentUser.id)[0];
+  }
 
   // function to submit bet from to backend form info
   const handleSubmit = async (event) => {
@@ -64,7 +72,7 @@ export function Dashboard() {
       <header className="p-4 text-2xl font-bold">Gambol!</header>
 
       <UserButton />
-      <a href="/sign-in">Sign In</a>
+      {loggedInUser === null && <a href="/sign-in">Sign In</a>}
 
       {/* user list */}
       <div className="border-b border-gray-400 p-4">

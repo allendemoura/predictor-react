@@ -55,9 +55,9 @@ export const PoolBets = (props) => {
       setIsBetting(true);
     } else {
       // redirect to sign in page if not logged in using react router
+      window.location.href = "/sign-in";
       // TODO: figure out how to do this with clerk?
       // TODO: do this properly with react router?
-      window.location.href = "/sign-in";
     }
   }
 
