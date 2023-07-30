@@ -110,10 +110,10 @@ export const PoolBets = (props) => {
           // green over version of transformed betting form buttons
           type === "over" ? (
             <>
-              <button className="w-full px-4 py-3 bg-orange-700 text-white rounded-lg gap-2 text-center my-1">
+              <button className="w-2/3 px-4 py-3 bg-orange-700 text-white rounded-lg gap-2 text-center my-1">
                 SHIP IT
               </button>
-              <div className="w-full px-4 py-3 bg-lime-500 text-white rounded-md flex gap-2">
+              <div className="w-2/3 px-4 py-3 bg-lime-500 text-white rounded-md flex gap-2">
                 <button
                   className="w-1/4 border-2 border-black border-solid text-2xl mx-auto"
                   onClick={handleDecrementBet}
@@ -132,7 +132,7 @@ export const PoolBets = (props) => {
           ) : (
             // red under version of transformed betting form buttons
             <>
-              <div className="w-full px-4 py-3 bg-red-500 text-white rounded-md flex gap-2">
+              <div className="w-2/3 px-4 py-3 bg-red-500 text-white rounded-md flex gap-2">
                 <button
                   className="w-1/4 border-2 border-black border-solid text-2xl mx-auto"
                   onClick={handleDecrementBet}
@@ -147,21 +147,21 @@ export const PoolBets = (props) => {
                   +
                 </button>
               </div>
-              <button className="w-full px-4 py-3 bg-orange-700 text-white rounded-lg gap-2 text-center my-1">
+              <button className="w-2/3 px-4 py-3 bg-orange-700 text-white rounded-lg gap-2 text-center my-1">
                 SHIP IT
               </button>
             </>
           )
         ) : // green over version of default bet button
         type === "over" ? (
-          <button className="w-full px-4 py-3 bg-lime-500 text-white rounded-md flex gap-2" onClick={handleOpenBetForm}>
+          <button className="w-2/3 px-4 py-3 bg-lime-500 text-white rounded-md flex gap-2" onClick={handleOpenBetForm}>
             <AiOutlineArrowUp className="relative top-1" />
             Bet the over
             <AiOutlineArrowUp className="relative top-1" />
           </button>
         ) : (
           // red under version of default bet button
-          <button className="w-full px-4 py-3 bg-red-500 text-white rounded-md flex gap-2" onClick={handleOpenBetForm}>
+          <button className="w-2/3 px-4 py-3 bg-red-500 text-white rounded-md flex gap-2" onClick={handleOpenBetForm}>
             <AiOutlineArrowDown className="relative top-1" />
             Bet the under
             <AiOutlineArrowDown className="relative top-1" />
