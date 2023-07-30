@@ -27,8 +27,11 @@ export const PoolBets = (props) => {
   // filter for only bets of the given type and reverse the array order if under for design symmetry
   const bets =
     type === "over"
-      ? pool.bets.filter((bet) => bet.bet === type.toUpperCase())
-      : pool.bets.filter((bet) => bet.bet === type.toUpperCase()).toReversed();
+      ? pool.bets
+          .filter((bet) => bet.bet === type.toUpperCase())
+          .sort((a, b) => a.amount - b.amount)
+          .toReversed()
+      : pool.bets.filter((bet) => bet.bet === type.toUpperCase()).sort((a, b) => a.amount - b.amount);
 
   // display bet info on hover
   const handleTouchMove = (e) => {
@@ -79,6 +82,44 @@ export const PoolBets = (props) => {
       setBetAmount(betAmount - 1);
     }
   }
+
+  // function to submit bet from to backend form info
+  const handleSubmit = async (event) => {
+    // prevent default form behaviour (refresh page)
+    // event.preventDefault();
+
+    // unpack form data
+    const { amount, poolID, bet, betterID } = event.target.form.elements;
+
+    // send bet to backend
+    const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/bets`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        amount: parseInt(amount.value),
+        poolID: parseInt(poolID.value),
+        bet: bet.value,
+        betterID: betterID.value,
+      }),
+    });
+
+    // check response
+    const json = await response.json();
+    if (!response.ok) {
+      console.log(json);
+      throw new Error(`HTTP error! status: ${response.status}`);
+    } else {
+      console.log(json);
+
+      // TODO: update user balance and pool amount on frontend for UI snappiness
+
+      // refresh bet data (note by tebbo: this function don't exist anymore. We
+      // will figure it out later. Got removed when i switched to react-router)
+      // fetchAllMyBets();
+    }
+  };
 
   return (
     <div className={`h-1/2 touch-none	flex ${type === "over" ? "bg-lime-100" : "bg-red-100"}`}>
@@ -147,9 +188,19 @@ export const PoolBets = (props) => {
                   +
                 </button>
               </div>
-              <button className="w-2/3 px-4 py-3 bg-orange-700 text-white rounded-lg gap-2 text-center my-1">
-                SHIP IT
-              </button>
+              <form>
+                <input type="hidden" name="poolID" value={pool.id} />
+                <input type="hidden" name="betterID" value={user.id} />
+                <input type="hidden" name="bet" value={type.toUpperCase()} />
+                <input type="hidden" name="amount" value={betAmount} />
+                <button
+                  type="submit"
+                  className="w-2/3 px-4 py-3 bg-orange-700 text-white rounded-lg gap-2 text-center my-1"
+                  onClick={handleSubmit}
+                >
+                  SHIP IT
+                </button>
+              </form>
             </>
           )
         ) : // green over version of default bet button
@@ -161,6 +212,7 @@ export const PoolBets = (props) => {
           </button>
         ) : (
           // red under version of default bet button
+          // TODO: put the pot display etc under the button for symmetry. its fkd rn bc of jsx ternary madness
           <button className="w-2/3 px-4 py-3 bg-red-500 text-white rounded-md flex gap-2" onClick={handleOpenBetForm}>
             <AiOutlineArrowDown className="relative top-1" />
             Bet the under

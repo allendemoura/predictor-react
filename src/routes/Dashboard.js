@@ -30,42 +30,6 @@ export function Dashboard() {
     loggedInUser = users.filter((user) => user.id === currentUser.id)[0];
   }
 
-  // function to submit bet from to backend form info
-  const handleSubmit = async (event) => {
-    // prevent default form behaviour (refresh page)
-    event.preventDefault();
-
-    // unpack form data
-    const { amount, poolID, bet, better } = event.target.elements;
-
-    // send bet to backend
-    const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/bets`, {
-      method: "POST",
-      headrs: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({
-        amount: parseInt(amount.value),
-        poolID: parseInt(poolID.value),
-        bet: bet.value,
-        better: better.value,
-      }),
-    });
-
-    // check response
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    } else {
-      const json = await response.json();
-
-      // TODO: update user balance and pool amount on frontend for UI snappiness
-
-      // refresh bet data (note by tebbo: this function don't exist anymore. We
-      // will figure it out later. Got removed when i switched to react-router)
-      // fetchAllMyBets();
-    }
-  };
-
   // html to be rendered in browser
   return (
     // mobile optimized tailwind css
