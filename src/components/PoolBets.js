@@ -24,6 +24,7 @@ export const PoolBets = (props) => {
   const poolAmount = (type === "over" ? pool.overPool : pool.underPool) + betAmount;
   const ratio = betAmount / (poolAmount + betAmount);
   const winnings = Math.round(ratio * (type === "over" ? pool.underPool : pool.overPool)) + betAmount;
+
   // filter for only bets of the given type and reverse the array order if under for design symmetry
   const bets =
     type === "over"
@@ -34,9 +35,9 @@ export const PoolBets = (props) => {
       : pool.bets.filter((bet) => bet.bet === type.toUpperCase()).sort((a, b) => a.amount - b.amount);
 
   // determine if logged in user has bet on this pool
-  let hasBet = false;
+  let userBet = null;
   if (user) {
-    hasBet = bets.filter((bet) => bet.better.id === user.id).length > 0;
+    userBet = pool.bets.filter((bet) => bet.better.id === user.id)[0];
   }
   // display bet info on hover
   const handleTouchMove = (e) => {
@@ -59,13 +60,22 @@ export const PoolBets = (props) => {
 
   // bet button click handlers
   function handleOpenBetForm() {
+    // only allow bets if logged in and user has not already bet on the other side
     if (user) {
-      setIsBetting(true);
+      if (userBet && userBet.bet === type.toUpperCase()) {
+        setIsBetting(true);
+      } else if (!userBet) {
+        setIsBetting(true);
+      } else {
+        const poolType = type === "over" ? "Under" : "Over";
+        alert(`You have already bet on the ${poolType}! You can only bet on one side of the pool.`);
+      }
     } else {
       // redirect to sign in page if not logged in using react router
       window.location.href = "/sign-in";
       // TODO: figure out how to do this with clerk?
       // TODO: do this properly with react router?
+      // TODO: figure out how to redirect back to pool page after sign in
     }
   }
 
@@ -234,7 +244,7 @@ export const PoolBets = (props) => {
       >
         {
           // user bet preview bar for under bets
-          type === "under" && user && !hasBet && (
+          type === "under" && user && !userBet && (
             <div
               key={"overUserBet"}
               className="w-full border-transparent relative"
