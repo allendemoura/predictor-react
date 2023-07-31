@@ -39,6 +39,7 @@ export function Dashboard() {
       <UserButton />
       {loggedInUser === null && <a href="/sign-in">Sign In</a>}
 
+      {/* TODO: fix refresh issue when logging in (user not shown before manual refresh) */}
       {/* user list */}
       <div className="border-b border-gray-400 p-4">
         <div className="font-bold">All Users</div>

@@ -136,6 +136,7 @@ export const PoolBets = (props) => {
     }
   };
 
+  // TODO: fix refresh issue on pool amount when submitting bet (pool total doesnt always update without manual refresh)
   return (
     <div className={`h-1/2 touch-none	flex ${type === "over" ? "bg-lime-100" : "bg-red-100"}`}>
       <div className="text-black text-center h-full grow flex flex-col items-center justify-center">
@@ -166,9 +167,20 @@ export const PoolBets = (props) => {
           // green over version of transformed betting form buttons
           type === "over" ? (
             <>
-              <button className="w-2/3 px-4 py-3 bg-orange-700 text-white rounded-lg gap-2 text-center my-1">
-                SHIP IT
-              </button>
+              {/* TODO: using html form mucks up the address history with post request garbo, figure out how to do this better */}
+              <form className="w-2/3">
+                <input type="hidden" name="poolID" value={pool.id} />
+                <input type="hidden" name="betterID" value={user.id} />
+                <input type="hidden" name="bet" value={type.toUpperCase()} />
+                <input type="hidden" name="amount" value={betAmount} />
+                <button
+                  type="submit"
+                  className="w-full px-4 py-3 bg-orange-700 text-white rounded-3xl gap-2 text-center my-1"
+                  onClick={handleSubmit}
+                >
+                  SHIP IT
+                </button>
+              </form>
               <div className="w-2/3 px-4 py-3 bg-lime-500 text-white rounded-md flex gap-2">
                 <button
                   className="w-1/4 border-2 border-black border-solid text-2xl mx-auto"
@@ -203,14 +215,15 @@ export const PoolBets = (props) => {
                   +
                 </button>
               </div>
-              <form>
+              {/* TODO: fix form issue noted above on over button */}
+              <form className="w-2/3">
                 <input type="hidden" name="poolID" value={pool.id} />
                 <input type="hidden" name="betterID" value={user.id} />
                 <input type="hidden" name="bet" value={type.toUpperCase()} />
                 <input type="hidden" name="amount" value={betAmount} />
                 <button
                   type="submit"
-                  className="w-2/3 px-4 py-3 bg-orange-700 text-white rounded-lg gap-2 text-center my-1"
+                  className="w-full px-4 py-3 bg-orange-700 text-white rounded-3xl gap-2 text-center my-1"
                   onClick={handleSubmit}
                 >
                   SHIP IT
@@ -281,7 +294,7 @@ export const PoolBets = (props) => {
           })
         }
         {/* user bet preview bar for over bets*/}
-        {type === "over" && user && (
+        {type === "over" && user && !userBet && (
           <div
             key={"underUserBet"}
             className="w-full border-transparent relative"
