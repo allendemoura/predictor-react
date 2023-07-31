@@ -33,6 +33,11 @@ export const PoolBets = (props) => {
           .toReversed()
       : pool.bets.filter((bet) => bet.bet === type.toUpperCase()).sort((a, b) => a.amount - b.amount);
 
+  // determine if logged in user has bet on this pool
+  let hasBet = false;
+  if (user) {
+    hasBet = bets.filter((bet) => bet.better.id === user.id).length > 0;
+  }
   // display bet info on hover
   const handleTouchMove = (e) => {
     // get element at touch location
@@ -229,7 +234,7 @@ export const PoolBets = (props) => {
       >
         {
           // user bet preview bar for under bets
-          type === "under" && user && (
+          type === "under" && user && !hasBet && (
             <div
               key={"overUserBet"}
               className="w-full border-transparent relative"
@@ -253,11 +258,13 @@ export const PoolBets = (props) => {
                 key={bet.id}
                 className="w-full border-transparent relative"
                 data-name={`${bet.better.firstName} ${bet.better.lastName}`}
-                data-amount={bet.amount}
                 data-type={type}
+                data-amount={user && bet.better.id === user.id ? bet.amount + betAmount : bet.amount} // add user's bet to their existing bet if they have one
                 style={{
-                  height: `${(bet.amount / poolAmount) * 100}%`, // proportionate height calculated as percentage of total pool
-                  backgroundColor: COLORS[index % COLORS.length], // cycle through colors selected for constrast adjacency
+                  height: `${
+                    ((user && bet.better.id === user.id ? bet.amount + betAmount : bet.amount) / poolAmount) * 100
+                  }%`, // proportionate height calculated as percentage of total pool
+                  backgroundColor: user && bet.better.id === user.id ? "orange" : COLORS[index % COLORS.length], // highlight user's bet || cycle through colors selected for constrast adjacency
                 }}
               ></div>
             );
