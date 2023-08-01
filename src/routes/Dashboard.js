@@ -16,6 +16,9 @@ export const dashboardLoader = async ({ params }) => {
     fetch(`${process.env.REACT_APP_API_SERVER_URL}/users/${me.id}/bets`).then((res) => res.json()),
   ]);
 
+  // sort users by balance
+  users.sort((a, b) => b.balance - a.balance);
+
   return { users, pools, myBets };
 };
 
@@ -42,7 +45,7 @@ export function Dashboard() {
       {/* TODO: fix refresh issue when logging in (user not shown before manual refresh) */}
       {/* user list */}
       <div className="border-b border-gray-400 p-4">
-        <div className="font-bold">All Users</div>
+        <div className="font-bold">Leaderboard</div>
         {
           // loop through users and render them
           users.map((user) => (
