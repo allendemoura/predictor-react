@@ -52,7 +52,7 @@ export function Dashboard() {
         <div className="border-b border-gray-400 p-4">
           <div className="font-bold">Net Winnings Leaderboard</div>
           {users.map((user) => (
-            <div key={user.id}>
+            <div key={user.id} className={loggedInUser && user.id === loggedInUser.id ? "bg-orange-300" : ""}>
               {user.firstName} {user.lastName}: {user.balance - 50}
             </div>
           ))}
