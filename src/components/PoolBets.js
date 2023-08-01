@@ -99,13 +99,8 @@ export const PoolBets = (props) => {
   }
 
   // function to submit bet from to backend form info
+  // TODO: is there a way to stop the http request from going in the browser address bar and back button history?
   const handleSubmit = async (event) => {
-    // prevent default form behaviour (refresh page)
-    // event.preventDefault();
-
-    // unpack form data
-    const { amount, poolID, bet, betterID } = event.target.form.elements;
-
     // send bet to backend
     const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/bets`, {
       method: "POST",
@@ -113,10 +108,10 @@ export const PoolBets = (props) => {
         "Content-type": "application/json",
       },
       body: JSON.stringify({
-        amount: parseInt(amount.value),
-        poolID: parseInt(poolID.value),
-        bet: bet.value,
-        betterID: betterID.value,
+        amount: parseInt(betAmount),
+        poolID: parseInt(pool.id),
+        bet: type.toUpperCase(),
+        betterID: user.id,
       }),
     });
 
@@ -167,12 +162,7 @@ export const PoolBets = (props) => {
           // green over version of transformed betting form buttons
           type === "over" ? (
             <>
-              {/* TODO: using html form mucks up the address history with post request garbo, figure out how to do this better */}
               <form className="w-2/3">
-                <input type="hidden" name="poolID" value={pool.id} />
-                <input type="hidden" name="betterID" value={user.id} />
-                <input type="hidden" name="bet" value={type.toUpperCase()} />
-                <input type="hidden" name="amount" value={betAmount} />
                 <button
                   type="submit"
                   className="w-full px-4 py-3 bg-orange-700 text-white rounded-3xl gap-2 text-center my-1"
@@ -215,12 +205,7 @@ export const PoolBets = (props) => {
                   +
                 </button>
               </div>
-              {/* TODO: fix form issue noted above on over button */}
               <form className="w-2/3">
-                <input type="hidden" name="poolID" value={pool.id} />
-                <input type="hidden" name="betterID" value={user.id} />
-                <input type="hidden" name="bet" value={type.toUpperCase()} />
-                <input type="hidden" name="amount" value={betAmount} />
                 <button
                   type="submit"
                   className="w-full px-4 py-3 bg-orange-700 text-white rounded-3xl gap-2 text-center my-1"
