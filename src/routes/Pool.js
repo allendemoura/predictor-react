@@ -24,6 +24,7 @@ export const Pool = () => {
   let loggedInUser = null;
   if (user.isLoaded && user.isSignedIn) {
     loggedInUser = user.user;
+    loggedInUser.id = loggedInUser.primaryEmailAddressId;
     loggedInUser.balance = users.filter((user) => user.id === loggedInUser.id)[0].balance;
   }
 
