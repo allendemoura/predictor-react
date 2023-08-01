@@ -27,6 +27,7 @@ export function Dashboard() {
   let closedBets = null;
   if (currentUser.isLoaded && currentUser.isSignedIn) {
     loggedInUser = currentUser.user;
+    loggedInUser.id = loggedInUser.primaryEmailAddressId;
     myBets = bets.filter((bet) => bet.better.id === loggedInUser.id);
     activeBets = myBets.filter((bet) => bet.pool.result === "PENDING");
     closedBets = myBets.filter((bet) => bet.pool.result !== "PENDING");
