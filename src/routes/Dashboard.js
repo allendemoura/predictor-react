@@ -33,6 +33,7 @@ export function Dashboard() {
     myBets = bets.filter((bet) => bet.better.id === loggedInUser.id);
     activeBets = myBets.filter((bet) => bet.pool.result === "PENDING");
     closedBets = myBets.filter((bet) => bet.pool.result !== "PENDING");
+    // TODO: use this data for leaderboards
     wonBets = closedBets.filter((bet) => bet.pool.result === bet.bet);
     netWinnings = wonBets.reduce((acc, bet) => acc + bet.amount, 0);
   }

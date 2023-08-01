@@ -20,7 +20,7 @@ export const Pool = () => {
   const user = useUser();
 
   // if logged in, store logged in user in variable and add balance to it
-  // TODO: deal with clerk webhook delay bug (user is not in users list yet)
+  //  [solved?]TODO: deal with clerk webhook delay bug (user is not in users list yet)
   let loggedInUser = null;
   if (user.isLoaded && user.isSignedIn) {
     loggedInUser = user.user;
