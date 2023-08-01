@@ -51,26 +51,30 @@ export function Dashboard() {
       </div>
 
       {/* list of active bets */}
-      <div className="border-b border-gray-400 p-4">
-        <div className="font-bold">Your Active Bets</div>
-        {activeBets.map &&
-          activeBets.map((bet) => (
-            <div key={bet.id}>
-              {bet.pool.desc} {bet.bet} {bet.amount}
-            </div>
-          ))}
-      </div>
+      {currentUser.isLoaded && currentUser.isSignedIn && (
+        <div className="border-b border-gray-400 p-4">
+          <div className="font-bold">Your Active Bets</div>
+          {activeBets.map &&
+            activeBets.map((bet) => (
+              <div key={bet.id}>
+                {bet.pool.desc} {bet.bet} {bet.amount}
+              </div>
+            ))}
+        </div>
+      )}
 
       {/* history of closed bets */}
-      <div className="border-b border-gray-400 p-4">
-        <div className="font-bold">Your Closed Bets (History)</div>
-        {closedBets.map &&
-          closedBets.map((bet) => (
-            <div key={bet.id}>
-              {bet.pool.desc} {bet.bet === bet.pool.result ? "WON" : "LOST"} {bet.amount}
-            </div>
-          ))}
-      </div>
+      {currentUser.isLoaded && currentUser.isSignedIn && (
+        <div className="border-b border-gray-400 p-4">
+          <div className="font-bold">Your Closed Bets (History)</div>
+          {closedBets.map &&
+            closedBets.map((bet) => (
+              <div key={bet.id}>
+                {bet.pool.desc} {bet.bet === bet.pool.result ? "WON" : "LOST"} {bet.amount}
+              </div>
+            ))}
+        </div>
+      )}
 
       {/* list of all active pools */}
       <div className="border-b border-gray-400 p-4">
