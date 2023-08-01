@@ -39,16 +39,19 @@ export function Dashboard() {
       <UserButton />
       {loggedInUser === null && <a href="/sign-in">Sign In</a>}
 
-      {/* TODO: fix refresh issue when logging in (user not shown before manual refresh) */}
+      {/* TODO: fix refresh issue when creating account in (user not shown before manual refresh) 
+      EDIT: may not need to do this because they wont be on the leaderboard anyway */}
       {/* user list */}
-      <div className="border-b border-gray-400 p-4">
-        <div className="font-bold">Leaderboard</div>
-        {users.map((user) => (
-          <div key={user.id}>
-            {user.firstName} {user.lastName}: {user.balance}
-          </div>
-        ))}
-      </div>
+      {currentUser.isLoaded && (
+        <div className="border-b border-gray-400 p-4">
+          <div className="font-bold">Net Winnings Leaderboard</div>
+          {users.map((user) => (
+            <div key={user.id}>
+              {user.firstName} {user.lastName}: {user.balance - 50}
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* list of active bets */}
       {currentUser.isLoaded && currentUser.isSignedIn && (
