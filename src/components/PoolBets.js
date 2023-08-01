@@ -39,6 +39,14 @@ export const PoolBets = (props) => {
   if (user) {
     userBet = pool.bets.filter((bet) => bet.better.id === user.id)[0];
   }
+
+  // if pool is resolved, redirect to root
+  // TODO: handle this better
+  // TODO+: make a resolved pool page?
+  if (pool.result !== "PENDING") {
+    window.location.href = "/";
+  }
+
   // display bet info on hover
   const handleTouchMove = (e) => {
     // get element at touch location

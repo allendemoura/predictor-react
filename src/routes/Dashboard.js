@@ -25,12 +25,16 @@ export function Dashboard() {
   let myBets = null;
   let activeBets = null;
   let closedBets = null;
+  let wonBets = null;
+  let netWinnings = null;
   if (currentUser.isLoaded && currentUser.isSignedIn) {
     loggedInUser = currentUser.user;
     loggedInUser.id = loggedInUser.primaryEmailAddressId;
     myBets = bets.filter((bet) => bet.better.id === loggedInUser.id);
     activeBets = myBets.filter((bet) => bet.pool.result === "PENDING");
     closedBets = myBets.filter((bet) => bet.pool.result !== "PENDING");
+    wonBets = closedBets.filter((bet) => bet.pool.result === bet.bet);
+    netWinnings = wonBets.reduce((acc, bet) => acc + bet.amount, 0);
   }
 
   return (
