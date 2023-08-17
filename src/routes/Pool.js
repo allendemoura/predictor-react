@@ -1,7 +1,8 @@
 import React from "react";
 import { PoolBets } from "../components/PoolBets.js";
 import { useUser } from "@clerk/clerk-react";
-import { useLoaderData } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
+import { FiChevronLeft } from "react-icons/fi";
 
 export const poolLoader = async ({ params }) => {
   const [users, pool] = await Promise.all([
@@ -32,28 +33,29 @@ export const Pool = () => {
     // master screen container
     <div className="h-screen flex flex-col">
       {/* user balance banner */}
-      <div className="p-4 text-center bg-gray-700 text-xs">
-        {loggedInUser && <div className="text-white">Your funds: {loggedInUser.balance}</div>}
+      <div className="p-4 bg-gray-700 text-xs flex align-center justify-between text-white">
+        <Link to="/" className="font-bold flex align-center">
+          <FiChevronLeft className="text-lg mr-2" /> Back to all pools
+        </Link>
+        {loggedInUser && <div>Your funds: {loggedInUser.balance}</div>}
       </div>
 
       {/* over display component */}
       <PoolBets pool={pool} users={users} type="over" user={loggedInUser} />
 
       {/* center point display */}
-      <div className="h-4 bg-gray-800 text-center flex flex-col items-center justify-center relative">
+      <div className="h-1 bg-gray-800 text-center flex flex-col items-center justify-center relative">
         <div className="relative rounded-lg flex flex-col">
           {/* point number display TODO: handle various point sizes dynamically */}
-          <div className="text-6xl font-light font-display py-2 px-6 bg-white rounded-md my-2">{pool.point}</div>
+          <div className="py-2 px-6 bg-white rounded-md my-2">
+            <div className="text-6xl font-light font-display mb-2">${pool.point}</div>
+            <div>{pool.desc}</div>
+          </div>
         </div>
       </div>
 
       {/* under display component */}
       <PoolBets pool={pool} users={users} type="under" user={loggedInUser} />
-
-      {/* pool desc */}
-      <div className="p-4 text-center bg-gray-700 text-xs">
-        <div className="text-white">{pool.desc}</div>
-      </div>
     </div>
   );
 };

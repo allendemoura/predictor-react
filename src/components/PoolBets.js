@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import { AiOutlineArrowUp, AiOutlineArrowDown } from "react-icons/ai";
+import { BsGem } from "react-icons/bs";
 
 // color wheels selected for contrast
 const OVER_COLORS = ["#4d7c0f", "#84cc16", "#bef264", "#84cc16", "#4d7c0f", "#365314"];
@@ -9,6 +10,11 @@ const UNDER_COLORS = ["#fca5a5", "#f87171", "#dc2626", "#991b1b", "#450a0a"];
 export const PoolBets = (props) => {
   // destructure props into vars
   const { pool, type, user } = props;
+
+  const totalInBothPools = pool.overPool + pool.underPool;
+  const thisPoolTotal = type === "over" ? pool.overPool : pool.underPool;
+
+  const percentageOfTotal = thisPoolTotal / totalInBothPools;
 
   // set color wheel based on pool type
   const COLORS = type === "over" ? OVER_COLORS : UNDER_COLORS;
@@ -21,9 +27,9 @@ export const PoolBets = (props) => {
   const [hoveredUserBet, setHoveredUserBet] = useState(0);
 
   // check if pool is over or under set vars accordingly
-  const poolAmount = (type === "over" ? pool.overPool : pool.underPool) + betAmount;
+  const poolAmount = thisPoolTotal + betAmount;
   const ratio = betAmount / (poolAmount + betAmount);
-  const winnings = Math.round(ratio * (type === "over" ? pool.underPool : pool.overPool)) + betAmount;
+  const winnings = Math.round(ratio * thisPoolTotal) + betAmount;
 
   // filter for only bets of the given type and reverse the array order if under for design symmetry
   const bets =
@@ -141,7 +147,12 @@ export const PoolBets = (props) => {
 
   // TODO: fix refresh issue on pool amount when submitting bet (pool total doesnt always update without manual refresh)
   return (
-    <div className={`h-1/2 touch-none	flex ${type === "over" ? "bg-lime-100" : "bg-red-100"}`}>
+    <div
+      style={{ height: `${percentageOfTotal * 100}%` }}
+      className={`min-h-[256px] touch-none	flex ${
+        type === "over" ? "bg-lime-100 flex-col-reverse pb-12" : "bg-red-100 flex-col pt-12"
+      }`}
+    >
       <div className="text-black text-center h-full grow flex flex-col items-center justify-center">
         {/* display winnings info if bet form is open */}
         {isBetting && (
@@ -160,8 +171,13 @@ export const PoolBets = (props) => {
         ) : (
           // else default to total bets
           <>
-            <div className="text-4xl font-display font-light">{poolAmount}</div>
-            <div>Total of {type} bets</div>
+            <div className="text-5xl font-display font-light flex items-center">
+              {poolAmount}{" "}
+              <span className="text-lg pl-1">
+                <BsGem />
+              </span>
+            </div>
+            <div className="uppercase">{type} pool total</div>
           </>
         )}
 
@@ -186,7 +202,9 @@ export const PoolBets = (props) => {
                 >
                   -
                 </button>
-                <div onClick={handleCloseBetForm}>{betAmount}</div>
+                <div onClick={handleCloseBetForm}>
+                  {betAmount} <BsGem />
+                </div>
                 <button
                   className="w-1/4 border-2 border-black border-solid text-2xl mx-auto"
                   onClick={handleIncrementBet}
@@ -205,7 +223,9 @@ export const PoolBets = (props) => {
                 >
                   -
                 </button>
-                <div onClick={handleCloseBetForm}>{betAmount}</div>
+                <div onClick={handleCloseBetForm}>
+                  {betAmount} <BsGem />
+                </div>
                 <button
                   className="w-1/4 border-2 border-black border-solid text-2xl mx-auto"
                   onClick={handleIncrementBet}
@@ -226,7 +246,7 @@ export const PoolBets = (props) => {
           )
         ) : // green over version of default bet button
         type === "over" ? (
-          <button className="w-2/3 px-4 py-3 bg-lime-500 text-white rounded-md flex gap-2" onClick={handleOpenBetForm}>
+          <button className="px-4 py-3 mt-2 bg-lime-500 text-white rounded-md flex gap-2" onClick={handleOpenBetForm}>
             <AiOutlineArrowUp className="relative top-1" />
             Bet the over
             <AiOutlineArrowUp className="relative top-1" />
@@ -234,7 +254,7 @@ export const PoolBets = (props) => {
         ) : (
           // red under version of default bet button
           // TODO: put the pot display etc under the button for symmetry. its fkd rn bc of jsx ternary madness
-          <button className="w-2/3 px-4 py-3 bg-red-500 text-white rounded-md flex gap-2" onClick={handleOpenBetForm}>
+          <button className="px-4 py-3 mt-2 bg-red-500 text-white rounded-md flex gap-2" onClick={handleOpenBetForm}>
             <AiOutlineArrowDown className="relative top-1" />
             Bet the under
             <AiOutlineArrowDown className="relative top-1" />
@@ -244,7 +264,7 @@ export const PoolBets = (props) => {
 
       {/* bet bar selector display */}
       <div
-        className="w-5 h-full bg-gray-300 ml-auto flex flex-col align-end"
+        className="h-5 w-full bg-gray-300 ml-auto flex flex-row align-end"
         onTouchEnd={handleTouchEnd}
         onTouchMove={(e) => handleTouchMove(e, type)}
       >
@@ -258,7 +278,7 @@ export const PoolBets = (props) => {
               data-amount={betAmount}
               data-type={type}
               style={{
-                height: `${(betAmount / poolAmount) * 100}%`, // proportionate height calculated as percentage of total pool
+                width: `${(betAmount / poolAmount) * 100}%`, // proportionate width calculated as percentage of total pool
                 backgroundColor: "orange", // cycle through colors selected for constrast adjacency
               }}
             ></div>
@@ -277,9 +297,9 @@ export const PoolBets = (props) => {
                 data-type={type}
                 data-amount={user && bet.better.id === user.id ? bet.amount + betAmount : bet.amount} // add user's bet to their existing bet if they have one
                 style={{
-                  height: `${
+                  width: `${
                     ((user && bet.better.id === user.id ? bet.amount + betAmount : bet.amount) / poolAmount) * 100
-                  }%`, // proportionate height calculated as percentage of total pool
+                  }%`, // proportionate width calculated as percentage of total pool
                   backgroundColor: user && bet.better.id === user.id ? "orange" : COLORS[index % COLORS.length], // highlight user's bet || cycle through colors selected for constrast adjacency
                 }}
               ></div>
@@ -295,7 +315,7 @@ export const PoolBets = (props) => {
             data-amount={betAmount}
             data-type={type}
             style={{
-              height: `${(betAmount / poolAmount) * 100}%`, // proportionate height calculated as percentage of total pool
+              width: `${(betAmount / poolAmount) * 100}%`, // proportionate width calculated as percentage of total pool
               backgroundColor: "orange", // cycle through colors selected for constrast adjacency
             }}
           ></div>
