@@ -46,6 +46,8 @@ export function Dashboard() {
       <UserButton />
       {loggedInUser === null && <a href="/sign-in">Sign In</a>}
 
+      {/* TODO: User Profile - betting record, wonBets, netWinnings, etc */}
+
       {/* TODO: fix refresh issue when creating account in (user not shown before manual refresh) 
       EDIT: may not need to do this because they wont be on the leaderboard anyway */}
       {/* user list */}
