@@ -1,5 +1,6 @@
 import { useLoaderData } from "react-router-dom";
 import { UserButton, useUser } from "@clerk/clerk-react";
+import { BsGem } from "react-icons/bs";
 
 // TODO: look into global state for logged in user?
 
@@ -89,11 +90,14 @@ export function Dashboard() {
       <div className="border-b border-gray-400 p-4">
         <div className="font-bold">Active Pools</div>
         {pools.map((pool) => (
-          <div key={pool.id}>
-            <a href={`/pool/${pool.id}`} className="underline text-blue-400" key={pool.id}>
-              {pool.desc} <b>{pool.point}</b> Under: {pool.underPool} Over: {pool.overPool}
-            </a>
-          </div>
+          <a href={`/pool/${pool.id}`} key={pool.id}>
+            <div className="rounded-3xl text-center font-bold bg-blue-500 my-2" key={pool.id}>
+              <div className="text-lime-500 ">Over: {pool.overPool}</div>
+              <div>{pool.desc}</div>
+              <div className="text-slate-200">{pool.point}</div>
+              <div className="text-red-600 ">Under: {pool.underPool}</div>
+            </div>
+          </a>
         ))}
       </div>
     </>
