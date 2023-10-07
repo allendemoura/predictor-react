@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import { AiOutlineArrowUp, AiOutlineArrowDown } from "react-icons/ai";
 import { BsGem } from "react-icons/bs";
+import { FiChevronRight } from "react-icons/fi";
 
 // color wheels selected for contrast
 const OVER_COLORS = ["#4d7c0f", "#84cc16", "#bef264", "#84cc16", "#4d7c0f", "#365314"];
@@ -143,19 +144,20 @@ export const PoolBets = (props) => {
   // TODO: fix refresh issue on pool amount when submitting bet (pool total doesnt always update without manual refresh)
   return (
     <div className={`h-1/2 touch-none	flex ${type === "over" ? "bg-lime-100" : "bg-red-100"}`}>
-      <div className="text-black text-center h-full grow flex flex-col items-center justify-center">
-        {/* display winnings info if bet form is open */}
-        {isBetting && (
-          <>
-            <div>Pot Share: {Math.floor(ratio * 100)}%</div>
-            <div>Minimum Winnings: {winnings}</div>
-          </>
-        )}
-
+      <div
+        className={`text-black text-center h-full grow flex flex-col items-center justify-center gap-2 ${
+          type === "over" ? "pb-[60px]" : "pt-[40px]"
+        }`}
+      >
         {/* display individual bet info on bar hover */}
         {isHovering ? (
           <>
-            <div className="text-4xl font-display font-light">{hoveredUserBet}</div>
+            <div className="text-5xl font-display font-light flex items-center">
+              {hoveredUserBet}{" "}
+              <span className="text-lg pl-1">
+                <BsGem />
+              </span>
+            </div>
             <div>{hoveredUserName}</div>
           </>
         ) : (
@@ -176,75 +178,82 @@ export const PoolBets = (props) => {
           // green over version of transformed betting form buttons
           type === "over" ? (
             <>
-              <form className="w-2/3">
-                <button
-                  type="submit"
-                  className="w-full px-4 py-3 bg-orange-700 text-white rounded-3xl gap-2 text-center my-1"
-                  onClick={handleSubmit}
-                >
-                  SHIP IT
-                </button>
-              </form>
-              <div className="w-2/3 px-4 py-3 bg-lime-500 text-white rounded-md flex gap-2">
-                <button
-                  className="w-1/4 border-2 border-black border-solid text-2xl mx-auto"
-                  onClick={handleDecrementBet}
-                >
+              <div className="flex gap-1 bg-lime-50 p-1 w-2/3 relative rounded-tl-md rounded-tr-md">
+                <button className="bg-lime-500 w-12 text-white rounded-md py-2 mx-auto" onClick={handleDecrementBet}>
                   -
                 </button>
-                <div onClick={handleCloseBetForm}>
-                  {betAmount} <BsGem />
+                <div onClick={handleCloseBetForm} className="flex items-center gap-2 flex-grow justify-center">
+                  <span className="text-3xl">{betAmount}</span> <BsGem />
                 </div>
-                <button
-                  className="w-1/4 border-2 border-black border-solid text-2xl mx-auto"
-                  onClick={handleIncrementBet}
-                >
+                <button className="bg-lime-500 w-12 text-white rounded-md py-2 mx-auto" onClick={handleIncrementBet}>
                   +
                 </button>
+
+                <form className="absolute top-full left-0 right-0">
+                  <button
+                    type="submit"
+                    className="w-full px-4 py-3 bg-orange-700 text-white rounded-md text-center my-1"
+                    onClick={handleSubmit}
+                  >
+                    SHIP IT
+                  </button>
+
+                  {/* display winnings info if bet form is open */}
+                  <div class="flex justify-between text-xs">
+                    <div>Pot Share: {Math.floor(ratio * 100)}%</div>
+                    <div>Min. Winnings: {winnings}</div>
+                  </div>
+                </form>
               </div>
             </>
           ) : (
             // red under version of transformed betting form buttons
             <>
-              <div className="w-2/3 px-4 py-3 bg-red-500 text-white rounded-md flex gap-2">
-                <button
-                  className="w-1/4 border-2 border-black border-solid text-2xl mx-auto"
-                  onClick={handleDecrementBet}
-                >
+              <div className="flex gap-1 bg-red-50 p-1 w-2/3 relative rounded-tl-md rounded-tr-md">
+                <button className="bg-red-500 w-12 text-white rounded-md py-2 mx-auto" onClick={handleDecrementBet}>
                   -
                 </button>
-                <div onClick={handleCloseBetForm}>
-                  {betAmount} <BsGem />
+                <div onClick={handleCloseBetForm} className="flex items-center gap-2 flex-grow justify-center">
+                  <span className="text-3xl">{betAmount}</span> <BsGem />
                 </div>
-                <button
-                  className="w-1/4 border-2 border-black border-solid text-2xl mx-auto"
-                  onClick={handleIncrementBet}
-                >
+                <button className="bg-red-500 w-12 text-white rounded-md py-2 mx-auto" onClick={handleIncrementBet}>
                   +
                 </button>
+
+                <form className="absolute top-full left-0 right-0">
+                  <button
+                    type="submit"
+                    className="w-full px-4 py-3 bg-orange-700 text-white rounded-md text-center my-1"
+                    onClick={handleSubmit}
+                  >
+                    SHIP IT
+                  </button>
+
+                  {/* display winnings info if bet form is open */}
+                  <div class="flex justify-between text-xs">
+                    <div>Pot Share: {Math.floor(ratio * 100)}%</div>
+                    <div>Min. Winnings: {winnings}</div>
+                  </div>
+                </form>
               </div>
-              <form className="w-2/3">
-                <button
-                  type="submit"
-                  className="w-full px-4 py-3 bg-orange-700 text-white rounded-3xl gap-2 text-center my-1"
-                  onClick={handleSubmit}
-                >
-                  SHIP IT
-                </button>
-              </form>
             </>
           )
         ) : // green over version of default bet button
         type === "over" ? (
-          <button className="w-2/3 px-4 py-3 bg-lime-500 text-white rounded-md flex gap-2" onClick={handleOpenBetForm}>
+          <button
+            className="w-2/3 px-4 py-3 bg-lime-500 text-white rounded-md flex gap-2 justify-center"
+            onClick={handleOpenBetForm}
+          >
             <AiOutlineArrowUp className="relative top-1" />
             Bet the over
             <AiOutlineArrowUp className="relative top-1" />
           </button>
         ) : (
           // red under version of default bet button
-          // TODO: put the pot display etc under the button for symmetry. its fkd rn bc of jsx ternary madness
-          <button className="w-2/3 px-4 py-3 bg-red-500 text-white rounded-md flex gap-2" onClick={handleOpenBetForm}>
+          <button
+            className="w-2/3 px-4 py-3 bg-red-500 text-white rounded-md flex gap-2 justify-center"
+            onClick={handleOpenBetForm}
+          >
             <AiOutlineArrowDown className="relative top-1" />
             Bet the under
             <AiOutlineArrowDown className="relative top-1" />
