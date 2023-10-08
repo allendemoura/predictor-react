@@ -1,27 +1,22 @@
-import { useLoaderData } from "react-router-dom";
-import { UserButton, useUser } from "@clerk/clerk-react";
-import { BsGem } from "react-icons/bs";
+import { Link, useLoaderData } from "react-router-dom";
+import { useUser } from "@clerk/clerk-react";
+import { BsGem, BsFillCheckCircleFill } from "react-icons/bs";
 import { FiChevronRight } from "react-icons/fi";
-import { BsFillBookmarkFill } from "react-icons/bs";
-import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import { AiFillStar, AiOutlineStar, AiFillCloseSquare } from "react-icons/ai";
+import { Header } from "../components/Header";
 
 // React Icons
 // https://react-icons.github.io/react-icons/search?q=star
 
-// TODO: move leaderboard to separate page
-// trophy icon in header that links to leaderboard page
-// homepage just list
-// black bar total %
-// star indicator for your bets
-// gray out bet opposite bet button when you have a bet
-// implement the profile page info integrated into the dashboard list
+// TODO: gray out bet opposite bet button when you have a bet
+// User Profile - betting record, wonBets, netWinnings, etc
 
 // TODO: look into global state for logged in user?
 
 export const dashboardLoader = async ({ params }) => {
   const [users, pools, bets] = await Promise.all([
     fetch(`${process.env.REACT_APP_API_SERVER_URL}/users`).then((res) => res.json()),
-    fetch(`${process.env.REACT_APP_API_SERVER_URL}/pools/active`).then((res) => res.json()),
+    fetch(`${process.env.REACT_APP_API_SERVER_URL}/pools`).then((res) => res.json()),
     fetch(`${process.env.REACT_APP_API_SERVER_URL}/bets`).then((res) => res.json()),
   ]);
 
@@ -34,95 +29,38 @@ export const dashboardLoader = async ({ params }) => {
 export function Dashboard() {
   const { users, pools, bets } = useLoaderData();
 
+  const activePools = pools.filter((pool) => pool.result === "PENDING");
+  const closedPools = pools.filter((pool) => pool.result !== "PENDING");
+  // all gems in play on pools for black bar percentage
+  const activeTotal = activePools.reduce((acc, pool) => acc + pool.overPool + pool.underPool, 0);
+  const closedTotal = closedPools.reduce((acc, pool) => acc + pool.overPool + pool.underPool, 0);
+
   const currentUser = useUser();
-  // if logged in, store logged in user in variable and find their bets
+  // if logged in, store logged in user in variable
   let loggedInUser = null;
-  let myBets = null;
-  let activeBets = null;
-  let closedBets = null;
-  let wonBets = null;
-  let netWinnings = null;
   if (currentUser.isLoaded && currentUser.isSignedIn) {
     loggedInUser = currentUser.user;
     loggedInUser.id = loggedInUser.primaryEmailAddressId;
-    myBets = bets.filter((bet) => bet.better.id === loggedInUser.id);
-    activeBets = myBets.filter((bet) => bet.pool.result === "PENDING");
-    closedBets = myBets.filter((bet) => bet.pool.result !== "PENDING");
-    // TODO: use this data for leaderboards
-    wonBets = closedBets.filter((bet) => bet.pool.result === bet.bet);
-    netWinnings = wonBets.reduce((acc, bet) => acc + bet.amount, 0);
   }
 
   return (
     <>
-      <div className="flex justify-between items-center p-4 bg-slate-800 text-white">
-        <header className="text-2xl font-bold">Gambol!</header>
-        <UserButton />
-      </div>
-
-      {loggedInUser === null && <a href="/sign-in">Sign In</a>}
-
-      {/* TODO: User Profile - betting record, wonBets, netWinnings, etc */}
-
-      {/* TODO: fix refresh issue when creating account in (user not shown before manual refresh) 
-      EDIT: may not need to do this because they wont be on the leaderboard anyway */}
-      {/* user list */}
-      {currentUser.isLoaded && (
-        <div className="border-b border-gray-400">
-          <div className="font-bold p-4">Net Winnings Leaderboard</div>
-          <ol className="list-decimal">
-            {users.map((user) => (
-              <li
-                key={user.id}
-                className={`flex justify-between py-1 px-4 ${
-                  loggedInUser && user.id === loggedInUser.id ? "font-bold bg-orange-300" : ""
-                }`}
-              >
-                <div>
-                  {user.firstName} {user.lastName}
-                </div>
-                <div>{user.balance - 50}</div>
-              </li>
-            ))}
-          </ol>
-        </div>
-      )}
-
-      {/* list of active bets */}
-      {currentUser.isLoaded && currentUser.isSignedIn && (
-        <div className="border-b border-gray-400 p-4">
-          <div className="font-bold">Your Active Bets</div>
-          {activeBets.map &&
-            activeBets.map((bet) => (
-              <div key={bet.id}>
-                {bet.pool.desc} {bet.bet} {bet.amount}
-              </div>
-            ))}
-        </div>
-      )}
-
-      {/* history of closed bets */}
-      {currentUser.isLoaded && currentUser.isSignedIn && (
-        <div className="border-b border-gray-400 p-4">
-          <div className="font-bold">Your Closed Bets (History)</div>
-          {closedBets.map &&
-            closedBets.map((bet) => (
-              <div key={bet.id}>
-                {bet.pool.desc} {bet.bet === bet.pool.result ? "WON" : "LOST"} {bet.amount}
-              </div>
-            ))}
-        </div>
-      )}
-
+      <Header />
       {/* list of all active pools */}
       <div className="border-b border-gray-400">
-        <div className="font-bold p-4">Active Betting Pools</div>
-        {pools.map((pool, i) => {
+        {/* <div className="font-bold p-4">Active Betting Pools</div> */}
+        {activePools.map((pool, i) => {
+          // ratio of over to under bets for color gradient background
           const percent =
             pool.overPool && pool.underPool ? (pool.overPool / (pool.overPool + pool.underPool)) * 100 : 50;
-          const isYourBet = i == 2 ? true : false;
-          const total = 50;
-          const totalPercent = ((pool.overPool + pool.underPool) / total) * 100;
+          // determine if you have a bet in this pool
+          const isYourBet =
+            loggedInUser === null ? false : pool.bets.filter((bet) => bet.better.id === loggedInUser.id).length > 0;
+          // if so, what was your bet and amount
+          const yourBet = isYourBet ? pool.bets.filter((bet) => bet.better.id === loggedInUser.id)[0].bet : null;
+          const betAmount = isYourBet ? pool.bets.filter((bet) => bet.better.id === loggedInUser.id)[0].amount : null;
+          // percentage of total bets for black bar length
+          const totalPercent = ((pool.overPool + pool.underPool) / activeTotal) * 100;
 
           return (
             <a
@@ -137,7 +75,83 @@ export function Dashboard() {
                 <div className="flex-grow">
                   <div className="text-xl font-bold flex gap-2 items-center">
                     {pool.point}{" "}
-                    {isYourBet ? <AiFillStar className="text-black/60" /> : <AiOutlineStar className="text-black/60" />}
+                    {isYourBet ? (
+                      <>
+                        <AiFillStar className="text-black/60" />
+                        <div className="text-sm font-light">{" " + yourBet + " " + betAmount}</div>
+                      </>
+                    ) : (
+                      <AiOutlineStar className="text-black/60" />
+                    )}
+                  </div>
+                  <div>
+                    <div className="h-1 my-1.5 bg-black/30 rounded-md" style={{ width: `${totalPercent}%` }}></div>
+                  </div>
+                  <div className="text-sm">{pool.desc}</div>
+                </div>
+                <FiChevronRight className="text-2xl text-black/50 transition-all group-active:translate-x-2" />
+              </div>
+            </a>
+          );
+        })}
+      </div>
+      {/* list of all closed pools */}
+      <div className="border-b border-gray-400">
+        {/* <div className="font-bold p-4">Closed Betting Pools</div> */}
+        {closedPools.map((pool, i) => {
+          // ratio of over to under bets for color gradient background
+          const percent =
+            pool.overPool && pool.underPool ? (pool.overPool / (pool.overPool + pool.underPool)) * 100 : 50;
+          // determine if you have a bet in this pool
+          const isYourBet =
+            loggedInUser === null ? false : pool.bets.filter((bet) => bet.better.id === loggedInUser.id).length > 0;
+          // what was your bet
+          const yourBet = isYourBet ? pool.bets.filter((bet) => bet.better.id === loggedInUser.id)[0].bet : null;
+          // did you win?
+          const isWinner = isYourBet
+            ? pool.result === pool.bets.filter((bet) => bet.better.id === loggedInUser.id)[0].bet
+            : false;
+          // find your bet amount
+          const betAmount = isYourBet ? pool.bets.filter((bet) => bet.better.id === loggedInUser.id)[0].amount : null;
+          // find your winnings. TODO: not sure if this is exactly right, would be better to get this info from back end
+          const winnings =
+            betAmount && isWinner
+              ? yourBet === "over"
+                ? Math.round((betAmount / pool.overPool) * pool.underPool - betAmount)
+                : Math.round((betAmount / pool.underPool) * pool.overPool - betAmount)
+              : null;
+          // percentage of total bets for black bar length
+          const totalPercent = ((pool.overPool + pool.underPool) / closedTotal) * 100;
+
+          return (
+            <a
+              href={`/pool/${pool.id}`}
+              key={pool.id}
+              className={`block`}
+              style={{
+                backgroundImage: `linear-gradient(to right, #f7fee7 ${percent - 7}%, #fef2f2 ${percent + 7}%)`,
+              }}
+            >
+              <div className="border-t border-black/30 p-4 flex items-center justify-between group gap-4" key={pool.id}>
+                <div className="flex-grow">
+                  <div className="text-xl font-bold flex gap-2 items-center">
+                    {pool.result + " "}
+                    {pool.point}{" "}
+                    {isYourBet ? (
+                      isWinner ? (
+                        <>
+                          <BsFillCheckCircleFill className="text-black/60" />
+                          {" +" + winnings}
+                        </>
+                      ) : (
+                        <>
+                          <AiFillCloseSquare className="text-black/60" />
+                          {" -" + betAmount}
+                        </>
+                      )
+                    ) : (
+                      <AiOutlineStar className="text-black/60" />
+                    )}
                   </div>
                   <div>
                     <div className="h-1 my-1.5 bg-black/30 rounded-md" style={{ width: `${totalPercent}%` }}></div>

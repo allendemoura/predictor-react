@@ -7,6 +7,7 @@ import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn, SignIn, SignUp } 
 import { AppWrapper } from "./components/AppWrapper";
 import { Dashboard, dashboardLoader } from "./routes/Dashboard";
 import { Pool, poolLoader } from "./routes/Pool";
+import { Leaderboard, leaderboardLoader } from "./routes/Leaderboard";
 
 if (!process.env.REACT_APP_CLERK_PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key");
@@ -36,6 +37,11 @@ const router = createBrowserRouter([
     path: "/pool/:poolId",
     element: <Pool />,
     loader: poolLoader,
+  },
+  {
+    path: "/leaderboard",
+    element: <Leaderboard />,
+    loader: leaderboardLoader,
   },
 ]);
 

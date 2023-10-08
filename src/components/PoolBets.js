@@ -42,13 +42,6 @@ export const PoolBets = (props) => {
     userBet = pool.bets.filter((bet) => bet.better.id === user.id)[0];
   }
 
-  // if pool is resolved, redirect to root
-  // TODO: handle this better
-  // TODO+: make a resolved pool page?
-  if (pool.result !== "PENDING") {
-    window.location.href = "/";
-  }
-
   // display bet info on hover
   const handleTouchMove = (e) => {
     // get element at touch location
@@ -70,22 +63,25 @@ export const PoolBets = (props) => {
 
   // bet button click handlers
   function handleOpenBetForm() {
-    // only allow bets if logged in and user has not already bet on the other side
-    if (user) {
-      if (userBet && userBet.bet === type.toUpperCase()) {
-        setIsBetting(true);
-      } else if (!userBet) {
-        setIsBetting(true);
+    // dont allow bets on resolved pools
+    if (pool.result === "PENDING") {
+      // only allow bets if logged in and user has not already bet on the other side
+      if (user) {
+        if (userBet && userBet.bet === type.toUpperCase()) {
+          setIsBetting(true);
+        } else if (!userBet) {
+          setIsBetting(true);
+        } else {
+          const poolType = type === "over" ? "Under" : "Over";
+          alert(`You have already bet on the ${poolType}! You can only bet on one side of the pool.`);
+        }
       } else {
-        const poolType = type === "over" ? "Under" : "Over";
-        alert(`You have already bet on the ${poolType}! You can only bet on one side of the pool.`);
+        // redirect to sign in page if not logged in using react router
+        window.location.href = "/sign-in";
+        // TODO: figure out how to do this with clerk?
+        // do this properly with react router?
+        // figure out how to redirect back to pool page after sign in
       }
-    } else {
-      // redirect to sign in page if not logged in using react router
-      window.location.href = "/sign-in";
-      // TODO: figure out how to do this with clerk?
-      // TODO: do this properly with react router?
-      // TODO: figure out how to redirect back to pool page after sign in
     }
   }
 
@@ -111,6 +107,11 @@ export const PoolBets = (props) => {
   // function to submit bet from to backend form info
   // TODO: is there a way to stop the http request from going in the browser address bar and back button history?
   const handleSubmit = async (event) => {
+    // failsafe to disable bet submission if pool is resolved. this button shouldnt be visible but just in case
+    if (pool.result !== "PENDING") {
+      return (window.location.href = "/");
+    }
+
     // send bet to backend
     const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/bets`, {
       method: "POST",
@@ -143,7 +144,20 @@ export const PoolBets = (props) => {
 
   // TODO: fix refresh issue on pool amount when submitting bet (pool total doesnt always update without manual refresh)
   return (
-    <div className={`h-1/2 touch-none	flex ${type === "over" ? "bg-lime-100" : "bg-red-100"}`}>
+    <div
+      className={`h-1/2 touch-none	flex ${
+        // set background color based on pool result
+        pool.result === "PENDING"
+          ? type === "over"
+            ? "bg-lime-100"
+            : "bg-red-100"
+          : pool.result === type.toUpperCase()
+          ? type === "over"
+            ? "bg-lime-200"
+            : "bg-red-200"
+          : "bg-gray-100"
+      }`}
+    >
       <div
         className={`text-black text-center h-full grow flex flex-col items-center justify-center gap-2 ${
           type === "over" ? "pb-[60px]" : "pt-[40px]"
@@ -199,7 +213,7 @@ export const PoolBets = (props) => {
                   </button>
 
                   {/* display winnings info if bet form is open */}
-                  <div class="flex justify-between text-xs">
+                  <div className="flex justify-between text-xs">
                     <div>Pot Share: {Math.floor(ratio * 100)}%</div>
                     <div>Min. Winnings: {winnings}</div>
                   </div>
@@ -230,7 +244,7 @@ export const PoolBets = (props) => {
                   </button>
 
                   {/* display winnings info if bet form is open */}
-                  <div class="flex justify-between text-xs">
+                  <div className="flex justify-between text-xs">
                     <div>Pot Share: {Math.floor(ratio * 100)}%</div>
                     <div>Min. Winnings: {winnings}</div>
                   </div>
@@ -240,24 +254,30 @@ export const PoolBets = (props) => {
           )
         ) : // green over version of default bet button
         type === "over" ? (
-          <button
-            className="w-2/3 px-4 py-3 bg-lime-500 text-white rounded-md flex gap-2 justify-center"
-            onClick={handleOpenBetForm}
-          >
-            <AiOutlineArrowUp className="relative top-1" />
-            Bet the over
-            <AiOutlineArrowUp className="relative top-1" />
-          </button>
+          // hide button if pool is resolved
+          pool.result === "PENDING" && (
+            <button
+              className="w-2/3 px-4 py-3 bg-lime-500 text-white rounded-md flex gap-2 justify-center"
+              onClick={handleOpenBetForm}
+            >
+              <AiOutlineArrowUp className="relative top-1" />
+              Bet the over
+              <AiOutlineArrowUp className="relative top-1" />
+            </button>
+          )
         ) : (
-          // red under version of default bet button
-          <button
-            className="w-2/3 px-4 py-3 bg-red-500 text-white rounded-md flex gap-2 justify-center"
-            onClick={handleOpenBetForm}
-          >
-            <AiOutlineArrowDown className="relative top-1" />
-            Bet the under
-            <AiOutlineArrowDown className="relative top-1" />
-          </button>
+          // hide button if pool is resolved
+          pool.result === "PENDING" && (
+            // red under version of default bet button
+            <button
+              className="w-2/3 px-4 py-3 bg-red-500 text-white rounded-md flex gap-2 justify-center"
+              onClick={handleOpenBetForm}
+            >
+              <AiOutlineArrowDown className="relative top-1" />
+              Bet the under
+              <AiOutlineArrowDown className="relative top-1" />
+            </button>
+          )
         )}
       </div>
 

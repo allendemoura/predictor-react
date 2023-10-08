@@ -21,7 +21,6 @@ export const Pool = () => {
   const user = useUser();
 
   // if logged in, store logged in user in variable and add balance to it
-  //  [solved?]TODO: deal with clerk webhook delay bug (user is not in users list yet)
   let loggedInUser = null;
   if (user.isLoaded && user.isSignedIn) {
     loggedInUser = user.user;
@@ -46,7 +45,7 @@ export const Pool = () => {
       {/* center point display */}
       <div className="h-1 bg-gray-800 text-center flex flex-col items-center justify-center relative">
         <div className="relative rounded-lg flex flex-col justify-center items-center">
-          {/* point number display TODO: handle various point sizes dynamically */}
+          {/* point number display  */}
           <div className="max-w-[80%] py-2 px-6 bg-white rounded-md my-2">
             <div className="text-6xl font-light font-display mb-2">{pool.point}</div>
             <div
@@ -57,7 +56,7 @@ export const Pool = () => {
                 overflow: "hidden",
               }}
             >
-              {pool.desc} greet thanks that asthta hawssen alsdke asd asd asd asd asd asd asd asd asd asd asd asd asd
+              {pool.desc}
             </div>
           </div>
         </div>
