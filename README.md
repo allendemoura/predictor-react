@@ -1,70 +1,20 @@
-# Getting Started with Create React App
+# Predictor
+This mobile webapp aims to serve as a non-monetary [prediction market](https://en.wikipedia.org/wiki/Prediction_market) for the administrator, while presenting a simple and fun gamified betting interface to users. In small scale applications, such as a local group of friends, it serves primarily a purpose of entertainment, though when scaled up to regional or greater levels, the data collected can provide valuable insight into trends in public sentiment around key issues, eg. politics, cultural issues, market trends, and more. 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Prediction Markets
 
-## Available Scripts
+The inspiration for this project came after a conversation about the 2016 US presidential election with an attorney friend. He was keen to point out that, while the results shocked the world round, in retrospect there was some compelling data in an unlikely place: UK sports bookies. Political betting is illegal in the US, but fair game in other nations such and the United Kingdom, where political betting is commonplace and offered in 'bodega'-style corner stores all througout the country. An [examination](https://money.com/donald-trump-2016-election-win-gambling-bets/) of the bets made revealed that, while the odds heavily favored a Clinton win due to the monetary value of the bets placed on her side, the bets on Trump were actually much more numerous, just made in much smaller amounts. One bookmaker, William Hill, reported in the article linked above that 75% of the money staked with them was on Clinton, but 69% of individual bets were on Trump. A nearly identical outcome is observed [here](https://theweek.com/brexit/73916/bookies-on-brexit-this-vote-worked-out-very-well-for-us) with the Brexit referendum. While bookies are keen to note in the latter article that their oddsmakers are not in the business of predictive accuracy, there is only one factor in the way of that - profit motive. Absent of the overt profit motive of traditional gambling operators, I believe that these mechanics could serve a much greater purpose, and potentially offer opportunites to interact with these abstract shifts in popular sentiment before they turn into shocking upsets like those seen in 2016 and beyond.
 
-In the project directory, you can run:
+While statistical analysis of such data is beyond the scope of this small project, I found the relation between these bets and electoral politics compelling enough to create this project as a vector to accumulate and experiment with this data. It's easy to see where the utility of this expands into other areas where public opinion or "temperature" is a high impact factor. This betting-style data offers not only a more compelling participation incentive to individuals than traditional solicited polls, but also a second dimension of quantification (the bet amount) to the administrators that could exceed the predictive potential of traditional polls. 
 
-### `npm start`
+Future projects might include translation of the data into weighted vector databases, and machine learning analysis.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+# Project Description
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+This is the first webapp that I've developed full stack (front and back end). I chose a React front end for its ubiquity, and took the opportunity to learn it for this project. The back end is an Express API in Node, and can be found [here](https://github.com/allendemoura/Gambol).
 
-### `npm test`
+I found the React component system fairly intuitive, and loved the idea of JSX interweaving my JS and HTML, but my first challenges came in some of the proclivities of JSX such as the need for <>fragments</>, and the some of the syntactic gymnastics required for ternary expressions. I often found myself in the uncanny valley between refactoring my code into new components, or writing inreasingly ugly and complex nested ternary rendering statements. In many cases, it was not clear which would result in less code duplication, prop drilling, etc, or what the best practice might be. After lots of googling and talks with colleagues, I got mostly contradictory personal preferences, so I chalked it up to the fluid and sometimes chaotic nature of web development standards, experimented with both sides of this coin, and tried to find a balance.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Another challenge was the UI design and general UX. I chose to focus on the mobile viewport for this app, because it seemed to me to be the most likely way that people would be interacting with an app like this. The design of it is centered on spontaneous and fun engagment, rather than the more contemplative sit-down desk format of something like a stock trading platform. I wanted to provide a simple dashboard for users that presented useful and engaging info, in a mobile-focused form factor. The primary purpose of the Dashboard (default homepage of the app) is to drive users into the betting interface, via the "Active Betting Pools" list. The visual design is very much a work in progress pending review by more design-focused colleagues. 
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+The main event of the UX, and the meat of the app itself, is the betting interface that is shown once a user taps on one of the active betting pools. 
