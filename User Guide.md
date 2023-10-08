@@ -10,7 +10,7 @@ The black bar is the relative size of the pot. For active betting pools, it is r
 
 The star indicates whether you have a bet placed on this pool. If you do, your bet will be be displayed beside the star.
 
-Closed (resolved) pools have been paid out, and if you had a bet on them, your net winnings or loss will be displayed along with an indicator to show whether you won or lost.
+Closed (resolved) pools are displayed in the bottom of the list, in faded colors. They have been paid out, and if you had a bet on them, your net winnings or loss will be displayed along with an indicator to show whether you won or lost.
 
 Tap on any betting pool to enter the betting view.
 
@@ -35,6 +35,8 @@ When you bet, you are betting directly against the other side. You stand to win 
 - There are 30 gems on the Under, and 0 on the Over. You bet 1 gem on the over. Your friend sees the great odds and also bets 2 gems on the Over. If you win, you will get your 1 gem back and 10 gems from the other side, for a total of 11. Your friend will get 21, because they bet more. 
 
 All gems will be automatically credited to your account when the pool resolves and is closed.
+
+If you run out of gems, the bank will top you up with 5 automatically after some time, so you can start betting again and build up funds! The delay is variable and subject to change for accounts that attempt to abuse this feature, but will always be long enough that you can't just cheese it.
 
 ## Leaderboard
 
