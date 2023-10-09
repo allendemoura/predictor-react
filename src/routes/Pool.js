@@ -30,7 +30,7 @@ export const Pool = () => {
 
   return (
     // master screen container
-    <div className="h-screen flex flex-col">
+    <div className="h-[100svh] flex flex-col">
       {/* user balance banner */}
       <div className="p-4 bg-gray-700 text-xs flex align-center justify-between text-white">
         <Link to="/" className="font-bold flex align-center">

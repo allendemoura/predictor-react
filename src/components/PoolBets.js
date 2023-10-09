@@ -145,7 +145,7 @@ export const PoolBets = (props) => {
   // TODO: fix refresh issue on pool amount when submitting bet (pool total doesnt always update without manual refresh)
   return (
     <div
-      className={`h-1/2 touch-none	flex ${
+      className={`h-1/2 touch-none flex ${
         // set background color based on pool result
         pool.result === "PENDING"
           ? type === "over"
