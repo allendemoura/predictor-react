@@ -34,7 +34,8 @@ jobs:
           ###### End of Repository/Build Configurations ######
         env:
           REACT_APP_CLERK_PUBLISHABLE_KEY: pk_test_Y29ycmVjdC1zdGFnLTI0LmNsZXJrLmFjY291bnRzLmRldiQ
-          REACT_APP_API_SERVER_URL: https://predictor-backend-dev.azurewebsites.net
+          # REACT_APP_API_SERVER_URL: https://predictor-backend-dev.azurewebsites.net
+          REACT_APP_API_SERVER_URL: https://precisely-charming-scorpion.ngrok-free.app
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
