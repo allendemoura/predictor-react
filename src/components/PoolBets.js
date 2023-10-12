@@ -159,8 +159,8 @@ export const PoolBets = (props) => {
       }`}
     >
       <div
-        className={`text-black text-center h-full grow flex flex-col items-center justify-center gap-2 ${
-          type === "over" ? "pb-[60px]" : "pt-[40px]"
+        className={`text-black text-center h-full grow flex flex-col items-center gap-2 ${
+          type === "over" ? "pb-[18dvh] justify-center" : "pt-[12dvh] justify-start"
         }`}
       >
         {/* display individual bet info on bar hover */}
