@@ -46,12 +46,12 @@ export const Pool = () => {
       <div className="h-1 bg-gray-800 text-center flex flex-col items-center justify-center relative">
         <div className="relative rounded-lg flex flex-col justify-center items-center">
           {/* point number display  */}
-          <div className="max-w-[80%] py-2 px-6 bg-white rounded-md my-2">
-            <div className="text-6xl font-light font-display mb-2">{pool.point}</div>
+          <div className="max-w-[80%] max-h-[19dvh] py-2 px-6 bg-white rounded-md my-2">
+            <div className="text-5xl font-light font-display mb-2">{pool.point}</div>
             <div
               style={{
                 display: "-webkit-box",
-                WebkitLineClamp: 3,
+                WebkitLineClamp: 2,
                 WebkitBoxOrient: "vertical",
                 overflow: "hidden",
               }}
