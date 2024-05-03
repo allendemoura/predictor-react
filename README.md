@@ -52,7 +52,7 @@ Before running this React frontend, make sure you have the following prerequisit
    REACT_APP_API_SERVER_URL=your-api-server-url
    ```
 
-   Replace `your-clerk-publishable-key` with your Clerk Publishable Key and `your-api-server-url` with the URL of your API backend.
+   Replace `your-clerk-publishable-key` with your Clerk Publishable Key and `your-api-server-url` with the URL of the API backend.
 
 ## Usage
 
@@ -105,7 +105,7 @@ The `Header` component serves as the top navigation bar for the Gambol! web appl
 
 The `Header` component contributes to the overall user experience of the application by providing a consistent and user-friendly navigation interface.
 
-For a more detailed understanding of the component's implementation, please refer to the source code located in your project's `src/` directory.
+For a more detailed understanding of the component's implementation, please refer to the source code located in the project's `src/` directory.
 
 ## Pool Component
 
@@ -119,13 +119,13 @@ The `Pool` component is responsible for presenting the details of an individual 
 
 - **Under Display Component**: Similar to the "Over" display, this part focuses on the "Under" category. Users can place their bets and check the status of this category, including the total bet amount.
 
-The code for the `Pool` component can be found in the project's source code. It uses components from React and integrates with Clerk for user authentication. The component serves as a critical element in your Prediction Market Betting web application, enabling users to engage with and place bets in specific pools.
+The code for the `Pool` component can be found in the project's source code. It uses components from React and integrates with Clerk for user authentication. The component serves as a critical element in the Prediction Market Betting web application, enabling users to engage with and place bets in specific pools.
 
 For more detailed insights into the component's implementation, you can refer to the source code in the project's `src/` directory.
 
 ## PoolBets Component
 
-The `PoolBets` component is a crucial element of your Prediction Market Betting web application that allows users to view and place bets in betting pools. This component is responsible for rendering the user interface of individual betting pools, enabling users to make wagers on their predicted outcomes.
+The `PoolBets` component is a crucial element of the Prediction Market Betting web application that allows users to view and place bets in betting pools. This component is responsible for rendering the user interface of individual betting pools, enabling users to make wagers on their predicted outcomes.
 
 Key features of the `PoolBets` component include:
 
@@ -139,11 +139,11 @@ Key features of the `PoolBets` component include:
 
 The `PoolBets` component dynamically updates and reacts to user interactions, such as bet placement and hover actions, providing an engaging and user-friendly experience.
 
-For a more comprehensive understanding of the component's implementation, please refer to the source code located in your project's `src/` directory.
+For a more comprehensive understanding of the component's implementation, please refer to the source code located in the project's `src/` directory.
 
 ## Leaderboard Component
 
-The `Leaderboard` component provides users with a view of the top users ranked by their balance within your Prediction Market Betting web application. It also offers insights into the user's own performance in comparison to other bettors.
+The `Leaderboard` component provides users with a view of the top users ranked by their balance within the Prediction Market Betting web application. It also offers insights into the user's own performance in comparison to other bettors.
 
 ## Contributing
 
