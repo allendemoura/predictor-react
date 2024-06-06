@@ -1,5 +1,7 @@
 # Predictor
 
+LIVE BETA AT https://predictor-react.vercel.app/
+
 This mobile webapp aims to serve as a non-monetary [prediction market](https://en.wikipedia.org/wiki/Prediction_market) for the administrator, while presenting a simple and fun gamified betting interface to users. In small scale applications, such as a local group of friends, it serves primarily a purpose of entertainment, though when scaled up to regional or greater levels, the data collected can provide valuable insight into trends in public sentiment around key issues, eg. politics, cultural issues, market trends, and more.
 
 It's designed to work with the [Predictor API](https://github.com/allendemoura/predictor-backend-API) backend.
